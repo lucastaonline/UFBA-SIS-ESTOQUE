@@ -1,13 +1,13 @@
-package com.ufba.estoque;
+package com.ufba.stock_control;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SistemaDeEstoqueApplication {
+public class StockControlApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SistemaDeEstoqueApplication.class, args);
+		SpringApplication.run(StockControlApplication.class, args);
 	}
 
 }
