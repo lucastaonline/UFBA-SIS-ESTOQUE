@@ -3,6 +3,8 @@ package com.ufba.stock_control.entities;
 import java.util.UUID;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -18,8 +20,10 @@ import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Entity(name = "transactions")
-
-public @Data class Transaction {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
