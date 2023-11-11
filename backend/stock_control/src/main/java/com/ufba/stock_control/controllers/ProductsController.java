@@ -10,9 +10,12 @@ import com.ufba.stock_control.dtos.products.CreateProductDTO;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.services.ProductsService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name =  "Products", description = "Products related endpoints")
 @RestController
 @RequestMapping(
   path = "/products",

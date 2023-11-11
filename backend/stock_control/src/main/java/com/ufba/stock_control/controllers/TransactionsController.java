@@ -4,6 +4,9 @@ import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.Transaction;
 import com.ufba.stock_control.services.ProductsService;
 import com.ufba.stock_control.services.TransactionsService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
+@Tag(name =  "Transactions",  description = "Transaction related routes")
 @RestController
 @RequestMapping(
   path = "/transactions",
