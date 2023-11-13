@@ -41,5 +41,4 @@ public class TransactionsController {
     return ResponseEntity.status(HttpStatus.OK).build();
   }
   
-
 }

@@ -39,4 +39,11 @@ public class Product {
       inverseJoinColumns = @JoinColumn(name = "id")
     )
     private Set<ProductCategory> categories;
+    
+    public Product(CreateProductDTO productDTO) {
+      this.name = productDTO.getName();
+      this.stock = productDTO.getStock();
+      this.price = productDTO.getPrice();
+      this.description = productDTO.getDescription();
+    }
 }

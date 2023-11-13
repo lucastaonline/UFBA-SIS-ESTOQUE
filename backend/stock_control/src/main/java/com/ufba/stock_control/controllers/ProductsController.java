@@ -24,8 +24,8 @@ public class ProductsController {
   private ProductsService productsService;
 
   @PostMapping
-  public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-    return ResponseEntity.status(HttpStatus.OK).body(productsService.createProduct(product));
+  public ResponseEntity<Product> addProduct(@RequestBody CreateProductDTO productDTO) {
+    return ResponseEntity.status(HttpStatus.OK).body(productsService.createProduct(productDTO));
   }
   @GetMapping("/{id}")
   public ResponseEntity<Product> findProduct(@PathVariable("id") UUID id) {
@@ -39,6 +39,11 @@ public class ProductsController {
   public ResponseEntity<Void> deleteProduct(@PathVariable("id") UUID id) {
     productsService.deleteProduct(id);
     return ResponseEntity.status(HttpStatus.OK).build();
+  }
+  
+  @PutMapping("/{id}")
+  public Product updateProduct(@PathVariable("id") UUID id, @RequestBody Product product) {
+    return productsService.updateProduct(id, product);
   }
   
 

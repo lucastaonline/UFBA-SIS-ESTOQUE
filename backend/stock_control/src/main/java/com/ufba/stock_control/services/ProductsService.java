@@ -16,7 +16,8 @@ public class ProductsService {
   @Autowired
   private ProductsRepository productsRepository; 
 
-  public Product createProduct(Product product) {
+  public Product createProduct(CreateProductDTO productDTO) {
+    Product product = new Product(productDTO);
     return productsRepository.save(product);
   }
 
@@ -28,9 +29,14 @@ public class ProductsService {
      productsRepository.deleteById(id);
   }
 
-  public Product updateProduct() {
-
-    return null;
+  public Product updateProduct(UUID id, Product requestProduct) {
+    Product existingProduct = productsRepository.findById(id).orElseThrow(()-> new RuntimeException());
+    existingProduct.setName(requestProduct.getName());
+    existingProduct.setDescription(requestProduct.getDescription());
+    existingProduct.setPrice(requestProduct.getPrice());
+    existingProduct.setStock(requestProduct.getStock()); 
+    existingProduct.setCategories(requestProduct.getCategories());
+    return productsRepository.save(existingProduct);
   }
 
   public List<Product> listProducts() {

@@ -2,7 +2,6 @@ package com.ufba.stock_control.services;
 
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.Transaction;
-import com.ufba.stock_control.repositories.ProductsRepository;
 import com.ufba.stock_control.repositories.TransactionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
