@@ -5,8 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.ufba.stock_control.dtos.products.CreateProductDTO;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.services.ProductsService;
 
