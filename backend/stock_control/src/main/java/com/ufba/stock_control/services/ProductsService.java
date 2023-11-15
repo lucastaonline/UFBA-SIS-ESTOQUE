@@ -3,9 +3,11 @@ package com.ufba.stock_control.services;
 import  java.util.List;
 import java.util.UUID;
 
+import com.ufba.stock_control.dtos.products.CreateProductResponse;
+import com.ufba.stock_control.helpers.mappers.ProductsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ufba.stock_control.dtos.products.CreateProductDTO;
+import com.ufba.stock_control.dtos.products.CreateProductRequest;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.repositories.ProductsRepository;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,25 @@ import org.springframework.stereotype.Service;
 // TODO: FINISH THE SERVICES
 @Service
 public class ProductsService {
+  private final ProductsMapper productsMapper;
   @Autowired
-  private ProductsRepository productsRepository; 
+  private ProductsRepository productsRepository;
 
-  public Product createProduct(CreateProductDTO productDTO) {
-    Product product = new Product(productDTO);
-    return productsRepository.save(product);
+  public ProductsService( ProductsMapper productsMapper) {
+    this.productsMapper = productsMapper;
+  }
+
+  public CreateProductResponse createProduct(CreateProductRequest createProductRequest) {
+    Product createdProduct = this.productsRepository.save(productsMapper.toProductEntity(createProductRequest));
+    return CreateProductResponse.builder()
+      .id(createdProduct.getId())
+      .productName(createdProduct.getName())
+      .description(createdProduct.getDescription())
+      .price(createdProduct.getPrice())
+      .stock(createdProduct.getStock())
+      .category(createdProduct.getCategories())
+      .build();
+    
   }
 
   public Product findProduct(UUID id) {
@@ -40,6 +55,7 @@ public class ProductsService {
   }
 
   public List<Product> listProducts() {
+    
     return productsRepository.findAll();
   }
 

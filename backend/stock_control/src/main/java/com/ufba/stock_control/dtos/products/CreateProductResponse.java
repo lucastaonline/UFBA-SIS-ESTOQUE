@@ -1,18 +1,23 @@
 package com.ufba.stock_control.dtos.products;
 
-import java.util.UUID;
-
 import com.ufba.stock_control.entities.ProductCategory;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
-public abstract class CreateProductDTO {
-  ProductCategory category;
-  String name;
-  UUID selledId;
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class CreateProductResponse {
+
+  UUID id;
+  String productName;
   Double price;
   String description;
   Integer stock;
+  ProductCategory category;
 }
