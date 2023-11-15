@@ -10,4 +10,5 @@ import com.ufba.stock_control.entities.User;
 @Repository
 public interface UsersRepository extends JpaRepository<User, UUID>{
   User findOneByUserName(String userName);
+  User findOneByUserNameOrEmail(String userName, String email);
 }
