@@ -1,8 +1,6 @@
 package com.ufba.stock_control.controllers;
 
-import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.Transaction;
-import com.ufba.stock_control.services.ProductsService;
 import com.ufba.stock_control.services.TransactionsService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;

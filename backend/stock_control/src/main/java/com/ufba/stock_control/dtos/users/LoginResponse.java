@@ -14,9 +14,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-  UUID userId;
-  String username;
-  String email;
-  UserRole role;
-  String token;
+  String message;
 }

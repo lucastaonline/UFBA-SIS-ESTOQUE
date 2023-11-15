@@ -9,6 +9,7 @@ import com.ufba.stock_control.dtos.users.CreateUserRequest;
 import com.ufba.stock_control.dtos.users.CreateUserResponse;
 import com.ufba.stock_control.dtos.users.LoginResponse;
 import com.ufba.stock_control.dtos.users.LoginUserRequest;
+import com.ufba.stock_control.dtos.users.UserLoginDTO;
 import com.ufba.stock_control.entities.User;
 import com.ufba.stock_control.exceptions.ConflictException;
 import com.ufba.stock_control.exceptions.NotFoundException;
