@@ -28,11 +28,16 @@ public class SecurityConfig {
     "/auth/**"
   };
 
+<<<<<<< HEAD
   SecurityFilter securityFilter;
   
   public SecurityConfig(SecurityFilter securityFilter) {
     this.securityFilter =  securityFilter;
   }
+=======
+  @Autowired
+  SecurityFilter securityFilter;
+>>>>>>> 70e081ce61062eefe5d0e2b8d182859e45bba999
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
