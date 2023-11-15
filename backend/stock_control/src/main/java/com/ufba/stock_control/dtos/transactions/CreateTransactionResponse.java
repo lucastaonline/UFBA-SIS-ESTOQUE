@@ -1,7 +1,5 @@
 package com.ufba.stock_control.dtos.transactions;
 
-import com.ufba.stock_control.entities.TransactionStatus;
-import com.ufba.stock_control.entities.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.List;
 
 @Data
 @Builder
@@ -17,10 +16,7 @@ import java.util.UUID;
 public class CreateTransactionResponse {
   
   UUID id;
-  TransactionType type;
-  TransactionStatus status;
-  UUID SellerId; 
-  UUID buyerId;
+  String message;
   Date createdAt;
   Date updatedAt;
   

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductsService {
   private final ProductsMapper productsMapper;
+  
   @Autowired
   private ProductsRepository productsRepository;
 
@@ -52,7 +53,7 @@ public class ProductsService {
   }
 
   public Product updateProduct(UUID id, CreateProductRequest requestProduct) {
-    Product existingProduct = productsRepository.findById(id).orElseThrow(()-> new RuntimeException());
+    Product existingProduct = productsRepository.findById(id).orElseThrow(() -> new RuntimeException());
     existingProduct.setName(requestProduct.getProductName());
     existingProduct.setDescription(requestProduct.getDescription());
     existingProduct.setPrice(requestProduct.getPrice());

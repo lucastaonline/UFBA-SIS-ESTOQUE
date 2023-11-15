@@ -5,7 +5,6 @@ import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
 import com.ufba.stock_control.entities.Transaction;
 import com.ufba.stock_control.services.TransactionsService;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import java.util.UUID;
   produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class TransactionsController {
+  
   @Autowired
   private TransactionsService transactionsService;
 
