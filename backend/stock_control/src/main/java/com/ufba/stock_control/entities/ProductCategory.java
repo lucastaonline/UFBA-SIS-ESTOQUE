@@ -1,40 +1,22 @@
 package com.ufba.stock_control.entities;
 
-import java.util.UUID;
-import java.util.Date;
+public enum ProductCategory {
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+  MEDICAMENTOS("medicamentos"),
+  VITAMINAS("vitaminas"),
+  SUPLEMENTOS("suplementos"),
+  HIGIENE("higiene"),
+  COSMETICOS("cosmeticos");
 
-import java.util.Set;
+  private String category;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.GenerationType;
-import lombok.Data;
+  ProductCategory(String category) {
+    this.category = category;
+  }
 
-@Entity(name = "product_category")
-public @Data class ProductCategory {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(name = "category_name")
-    private String categoryName;
-
-    @ManyToMany(mappedBy = "categories")
-    private Set<Product> products;
-
-    @CreatedDate
-    @Column(name = "created_at")
-    private Date createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Date updatedAt;
+  public String getCategory() {
+    return this.category;
+  }
+  
 }
 

@@ -1,12 +1,13 @@
 package com.ufba.stock_control.controllers;
 
+import com.ufba.stock_control.dtos.products.CreateProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ufba.stock_control.dtos.products.CreateProductDTO;
+import com.ufba.stock_control.dtos.products.CreateProductRequest;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.services.ProductsService;
 
@@ -27,8 +28,8 @@ public class ProductsController {
   private ProductsService productsService;
 
   @PostMapping
-  public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-    return ResponseEntity.status(HttpStatus.OK).body(productsService.createProduct(product));
+  public ResponseEntity<CreateProductResponse> addProduct(@RequestBody CreateProductRequest productDTO) {
+    return ResponseEntity.status(HttpStatus.OK).body(productsService.createProduct(productDTO));
   }
   @GetMapping("/{id}")
   public ResponseEntity<Product> findProduct(@PathVariable("id") UUID id) {
@@ -42,6 +43,11 @@ public class ProductsController {
   public ResponseEntity<Void> deleteProduct(@PathVariable("id") UUID id) {
     productsService.deleteProduct(id);
     return ResponseEntity.status(HttpStatus.OK).build();
+  }
+  
+  @PutMapping("/{id}")
+  public Product updateProduct(@PathVariable("id") UUID id, @RequestBody Product product) {
+    return productsService.updateProduct(id, product);
   }
   
 
