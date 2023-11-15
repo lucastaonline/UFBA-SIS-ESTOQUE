@@ -32,24 +32,28 @@ public class ProductsController {
   public ResponseEntity<CreateProductResponse> addProduct(@RequestBody CreateProductRequest productDTO) {
     return ResponseEntity.status(HttpStatus.OK).body(productsService.createProduct(productDTO));
   }
-  @GetMapping("/{id}")
-  public ResponseEntity<Product> findProduct(@PathVariable("id") UUID id) {
+  @GetMapping(value = "/{id}", consumes = MediaType.ALL_VALUE)
+  public ResponseEntity<CreateProductResponse> findProduct(@PathVariable("id") UUID id) {
     return ResponseEntity.status(HttpStatus.OK).body(productsService.findProduct(id));
   }
-  @GetMapping
+  @GetMapping(consumes = MediaType.ALL_VALUE)
   public ResponseEntity<List<Product>> findAllProducts() {
     return ResponseEntity.status(HttpStatus.OK).body(productsService.listProducts());
   }
-  @DeleteMapping("/{id}")
+  @DeleteMapping(value = "/{id}", consumes = MediaType.ALL_VALUE)
   public ResponseEntity<Void> deleteProduct(@PathVariable("id") UUID id) {
     productsService.deleteProduct(id);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
   
   @PutMapping("/{id}")
-  public Product updateProduct(@PathVariable("id") UUID id, @RequestBody Product product) {
-    return productsService.updateProduct(id, product);
+  public Product updateProduct(@PathVariable("id") UUID id, @RequestBody CreateProductRequest productDTO) {
+    return productsService.updateProduct(id, productDTO);
   }
   
+  @GetMapping(value = "/{name}/", consumes = MediaType.ALL_VALUE)  
+  public ResponseEntity<CreateProductResponse> findProductByName(@PathVariable("name") String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(productsService.findProductByName(name));
+  }
 
 }

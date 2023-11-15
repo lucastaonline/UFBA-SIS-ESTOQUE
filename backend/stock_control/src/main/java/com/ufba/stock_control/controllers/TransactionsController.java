@@ -31,23 +31,23 @@ public class TransactionsController {
   public ResponseEntity<CreateTransactionResponse> addTransaction(@RequestBody CreateTransactionRequest transactionDTO) {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.createTransaction(transactionDTO));
   }
-  @GetMapping("/{id}")
-  public ResponseEntity<Transaction> findTransaction(@PathVariable("id") UUID id) {
+  @GetMapping(value = "/{id}", consumes = MediaType.ALL_VALUE)
+  public ResponseEntity<CreateTransactionResponse> findTransaction(@PathVariable("id") UUID id) {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.findTransaction(id));
   }
-  @GetMapping
+  @GetMapping(consumes = MediaType.ALL_VALUE)
   public ResponseEntity<List<Transaction>> findAllTransactions() {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.listTransactions());
   }
-  @DeleteMapping("/{id}")
+  @DeleteMapping(value = "/{id}", consumes = MediaType.ALL_VALUE)
   public ResponseEntity<Void> deleteTransaction(@PathVariable("id") UUID id) {
     transactionsService.deleteTransaction(id);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
   @PutMapping("/{id}")
-  public Transaction updateTransaction(@PathVariable("id") UUID id, @RequestBody Transaction transaction) {
-    return transactionsService.updateTransaction(id, transaction);
+  public CreateTransactionResponse updateTransaction(@PathVariable("id") UUID id, @RequestBody CreateTransactionRequest transactionDTO) {
+    return transactionsService.updateTransaction(id, transactionDTO);
   }
   
 }

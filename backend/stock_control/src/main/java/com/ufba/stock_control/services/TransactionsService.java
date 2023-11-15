@@ -8,6 +8,7 @@ import com.ufba.stock_control.entities.Transaction;
 import com.ufba.stock_control.helpers.mappers.ProductsMapper;
 import com.ufba.stock_control.helpers.mappers.TransactionMapper;
 import com.ufba.stock_control.repositories.TransactionsRepository;
+import com.ufba.stock_control.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class TransactionsService {
   private final TransactionMapper transactionMapper;
   @Autowired
   private TransactionsRepository transactionsRepository;
+  
+  @Autowired
+  private UsersRepository usersRepository;
 
   public TransactionsService(
     TransactionMapper transactionMapper
@@ -40,21 +44,30 @@ public class TransactionsService {
       .build();
   }
 
-  public Transaction findTransaction(UUID id) {
-    return transactionsRepository.findById(id).orElseThrow(()-> new RuntimeException());
+  public CreateTransactionResponse findTransaction(UUID id) {
+    Transaction createdTransaction = transactionsRepository.findById(id).orElseThrow(()-> new RuntimeException());
+    return CreateTransactionResponse.builder()
+      .id(createdTransaction.getId())
+      .type(createdTransaction.getType())
+      .status(createdTransaction.getStatus())
+      .SellerId(createdTransaction.getSeller().getId())
+      .buyerId(createdTransaction.getBuyer().getId())
+      .build();
   }
 
   public void deleteTransaction(UUID id) {
     transactionsRepository.deleteById(id);
   }
 
-  public Transaction updateTransaction(UUID id, Transaction createTransactionRequest) {
-    Transaction existingTransaction = transactionsRepository.findById(id).orElseThrow(()-> new RuntimeException());
-    existingTransaction.setType(createTransactionRequest.getType());
-    existingTransaction.setStatus(createTransactionRequest.getStatus());
-    existingTransaction.setSeller(createTransactionRequest.getSeller());
-    existingTransaction.setBuyer(createTransactionRequest.getBuyer());
-    return transactionsRepository.save(existingTransaction);
+  public CreateTransactionResponse updateTransaction(UUID id, CreateTransactionRequest createTransactionRequest) {
+    Transaction createdTransaction = this.transactionsRepository.save(transactionMapper.toTransactionEntity(createTransactionRequest));
+    return CreateTransactionResponse.builder()
+      .id(createdTransaction.getId())
+      .type(createdTransaction.getType())
+      .status(createdTransaction.getStatus())
+      .SellerId(createdTransaction.getSeller().getId())
+      .buyerId(createdTransaction.getBuyer().getId())
+      .build();
   }
 
   public List<Transaction> listTransactions() {
