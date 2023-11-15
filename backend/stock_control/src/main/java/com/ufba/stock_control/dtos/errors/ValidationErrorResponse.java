@@ -1,16 +1,19 @@
 package com.ufba.stock_control.dtos.errors;
 
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ErrorResponse {
+public class ValidationErrorResponse {
   private int status;
 	private String message;
 	private long timeStamp;
+	private List<FieldErrorResponse> errors;
 }

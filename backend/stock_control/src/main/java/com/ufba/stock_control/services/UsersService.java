@@ -9,6 +9,7 @@ import com.ufba.stock_control.dtos.users.CreateUserRequest;
 import com.ufba.stock_control.dtos.users.CreateUserResponse;
 import com.ufba.stock_control.entities.User;
 import com.ufba.stock_control.exceptions.ConflictException;
+import com.ufba.stock_control.exceptions.NotFoundException;
 import com.ufba.stock_control.helpers.mappers.UsersMapper;
 import com.ufba.stock_control.repositories.UsersRepository;
 
@@ -48,6 +49,10 @@ public class UsersService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return this.usersRepository.findOneByUserName(username);
+    var foundUser = this.usersRepository.findOneByUserName(username);
+    if (foundUser == null) {
+      throw new NotFoundException("Usuário não encontrado na base");
+    }
+    return foundUser;
   }
 }

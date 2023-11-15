@@ -1,6 +1,5 @@
 package com.ufba.stock_control.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,19 +24,15 @@ public class SecurityConfig {
     "/swagger-ui/**", 
     "/webjars/**",
     "/configuration/security", 
-    "/auth/**"
+    "/auth/login",
+    "/auth/create-user"
   };
 
-<<<<<<< HEAD
-  SecurityFilter securityFilter;
+  private SecurityFilter securityFilter;
   
   public SecurityConfig(SecurityFilter securityFilter) {
     this.securityFilter =  securityFilter;
   }
-=======
-  @Autowired
-  SecurityFilter securityFilter;
->>>>>>> 70e081ce61062eefe5d0e2b8d182859e45bba999
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

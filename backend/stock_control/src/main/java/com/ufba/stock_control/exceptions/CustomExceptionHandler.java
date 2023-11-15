@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.ufba.stock_control.dtos.errors.ValidationErrorResponse;
 import com.ufba.stock_control.dtos.errors.ErrorResponse;
 import com.ufba.stock_control.dtos.errors.FieldErrorResponse;
 
@@ -18,7 +19,7 @@ import com.ufba.stock_control.dtos.errors.FieldErrorResponse;
 public class CustomExceptionHandler {
   
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse>  handleValidationErrors(MethodArgumentNotValidException exception) {
+  public ResponseEntity<ValidationErrorResponse>  handleValidationErrors(MethodArgumentNotValidException exception) {
     List<FieldErrorResponse> response = new ArrayList<>();
         exception.getBindingResult()
             .getAllErrors()
@@ -30,7 +31,7 @@ public class CustomExceptionHandler {
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse.builder()
+            .body(ValidationErrorResponse.builder()
                 .timeStamp(System.currentTimeMillis())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message("FieldException")
@@ -46,9 +47,30 @@ public class CustomExceptionHandler {
           .body(ErrorResponse.builder()
               .timeStamp(System.currentTimeMillis())
               .status(HttpStatus.UNAUTHORIZED.value()).message("UnauthorizedException")
-              .errors(Collections.singletonList(FieldErrorResponse.builder()
-                  .message(ex.getMessage())
-                  .build())).build());
+              .build());
+  }
+  
+  
+  @ExceptionHandler(ConflictException.class)
+  public ResponseEntity<ErrorResponse> handleConflictError(ConflictException ex) {
+
+      return ResponseEntity
+          .status(HttpStatus.CONFLICT)
+          .body(ErrorResponse.builder()
+              .timeStamp(System.currentTimeMillis())
+              .status(HttpStatus.CONFLICT.value()).message("ConflictException")
+              .message(ex.getMessage()).build());
+  }
+  
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNotFoundError(NotFoundException ex) {
+
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(ErrorResponse.builder()
+              .timeStamp(System.currentTimeMillis())
+              .status(HttpStatus.NOT_FOUND.value()).message("NotFoundException")
+              .message(ex.getMessage()).build());
   }
 
 }

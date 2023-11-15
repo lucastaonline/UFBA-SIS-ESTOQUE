@@ -23,23 +23,23 @@ public @Data class User implements UserDetails {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(name = "user_name")
+  @Column(name = "user_name", unique = true)
   private String userName;
 
   @Column()
   private String password;
 
-  @Column()
+  @Column(unique = true)
   private String email;
 
-  @Column(name = "phone_number")
+  @Column(name = "phone_number", nullable = true)
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
-  private UserRole role;
+  private UserRole role =  UserRole.DEFAULT;
 
-  @Column
-  private Boolean enabled;
+  @Column()
+  private Boolean enabled = true;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
