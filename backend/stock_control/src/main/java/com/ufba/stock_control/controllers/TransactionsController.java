@@ -1,8 +1,8 @@
 package com.ufba.stock_control.controllers;
 
-import com.ufba.stock_control.entities.Product;
+import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
+import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
 import com.ufba.stock_control.entities.Transaction;
-import com.ufba.stock_control.services.ProductsService;
 import com.ufba.stock_control.services.TransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +24,8 @@ public class TransactionsController {
   private TransactionsService transactionsService;
 
   @PostMapping
-  public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
-    return ResponseEntity.status(HttpStatus.OK).body(transactionsService.createTransaction(transaction));
+  public ResponseEntity<CreateTransactionResponse> addTransaction(@RequestBody CreateTransactionRequest transactionDTO) {
+    return ResponseEntity.status(HttpStatus.OK).body(transactionsService.createTransaction(transactionDTO));
   }
   @GetMapping("/{id}")
   public ResponseEntity<Transaction> findTransaction(@PathVariable("id") UUID id) {
@@ -39,6 +39,11 @@ public class TransactionsController {
   public ResponseEntity<Void> deleteTransaction(@PathVariable("id") UUID id) {
     transactionsService.deleteTransaction(id);
     return ResponseEntity.status(HttpStatus.OK).build();
+  }
+
+  @PutMapping("/{id}")
+  public Transaction updateTransaction(@PathVariable("id") UUID id, @RequestBody Transaction transaction) {
+    return transactionsService.updateTransaction(id, transaction);
   }
   
 }
