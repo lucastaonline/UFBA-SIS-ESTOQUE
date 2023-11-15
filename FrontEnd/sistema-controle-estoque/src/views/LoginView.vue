@@ -4,6 +4,8 @@ import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
 import { useRouter } from 'vue-router'
+import type { LoginResponse } from '@/types/requisition_models/users'
+import type { AxiosResponse } from 'axios'
 
 const router = useRouter()
 
@@ -31,46 +33,47 @@ function login() {
     userLogin.password == ''
   ) {
     loggingIn.value = false
-    toastStore.setTitle('Erro!')
-    toastStore.setMessage('Você deve preencher todos os campos para fazer login.')
-    toastStore.setType('danger')
-    toastStore.setOpened(true)
+    toastStore.showMessage(
+      'danger',
+      'Erro!',
+      'Você deve preencher todos os campos para fazer login.'
+    )
 
     return
   }
 
   httpClient
     .post('login', userLogin)
-    .then((response: any) => {
-      // dependo do backend
-      const sucesso = true
+    .then((response: AxiosResponse<LoginResponse>) => {
       loggingIn.value = false
 
-      if (sucesso) {
-        authStore.setToken(response?.token)
-        authStore.setUser(response?.user)
+      if (response.status == 200) {
+        authStore.setToken(response.data.token)
+        authStore.setUser(userLogin)
         router.push({ name: 'home' })
-        return
       } else {
-        toastStore.setTitle('Erro!')
-        toastStore.setMessage('O login não pode ser efetuado efetuado com sucesso...')
-        toastStore.setType('danger')
-        toastStore.setOpened(true)
+        toastStore.showMessage(
+          'danger',
+          'Erro!',
+          'O login não pode ser efetuado efetuado com sucesso por conta de um erro desconhecido.'
+        )
       }
     })
     .catch((error) => {
+      console.log(error)
       loggingIn.value = false
-      if (import.meta.env.VITE_DEBUG) {
+      if (import.meta.env.VITE_DEBUG === 'true') {
         authStore.setToken('DEBUG-TOKEN')
         authStore.setUser({ username: 'DEBUG' })
         router.push({ name: 'home' })
         return
       }
 
-      toastStore.setTitle('Erro!')
-      toastStore.setMessage('O login não pode ser efetuado efetuado com sucesso...')
-      toastStore.setType('danger')
-      toastStore.setOpened(true)
+      toastStore.showMessage(
+        'danger',
+        'Erro!',
+        'O login não pode ser efetuado efetuado com sucesso por conta de um erro desconhecido.'
+      )
     })
 }
 </script>

@@ -18,6 +18,7 @@ const toastStore = useToastStore()
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
+      data-bs-autohide="false"
     >
       <div class="toast-header">
         <strong class="me-auto">{{ toastStore.informacoesToast.title }}</strong>

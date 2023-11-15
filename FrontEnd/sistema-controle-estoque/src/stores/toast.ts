@@ -10,20 +10,27 @@ export const useToastStore = defineStore('toast', () => {
     type: 'primary'
   })
 
-  function setTitle(title) {
+  function setTitle(title: string) {
     informacoesToast.title = title
   }
 
-  function setType(type) {
+  function setType(type: string) {
     informacoesToast.type = type
   }
 
-  function setMessage(message) {
+  function setMessage(message: string) {
     informacoesToast.message = message
   }
 
-  function setOpened(openedValue) {
+  function setOpened(openedValue: boolean) {
     opened.value = openedValue
+  }
+
+  function showMessage(type: string, title: string, message: string) {
+    setType(type)
+    setTitle(title)
+    setMessage(message)
+    setOpened(true)
   }
 
   watch(opened, (opened) => {
@@ -40,9 +47,7 @@ export const useToastStore = defineStore('toast', () => {
 
   return {
     informacoesToast,
-    setOpened,
-    setTitle,
-    setMessage,
-    setType
+    showMessage,
+    setOpened
   }
 })

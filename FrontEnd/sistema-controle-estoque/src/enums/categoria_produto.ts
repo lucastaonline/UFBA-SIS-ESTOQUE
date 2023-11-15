@@ -1,0 +1,15 @@
+export enum PRODUCT_CATEGORY {
+  MEDICINES,
+  VITAMINS,
+  SUPPLEMENTS,
+  HYGIENE,
+  COSMETICS
+}
+
+export const PRODUCT_CATEGORY_LABEL = new Map<number, string>([
+  [PRODUCT_CATEGORY.MEDICINES, 'Medicamentos'],
+  [PRODUCT_CATEGORY.VITAMINS, 'Vitaminas'],
+  [PRODUCT_CATEGORY.SUPPLEMENTS, 'Suplementos'],
+  [PRODUCT_CATEGORY.HYGIENE, 'Higiene'],
+  [PRODUCT_CATEGORY.COSMETICS, 'Cosméticos']
+])
