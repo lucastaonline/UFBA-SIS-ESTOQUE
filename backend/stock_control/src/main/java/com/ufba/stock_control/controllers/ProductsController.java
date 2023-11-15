@@ -11,6 +11,7 @@ import com.ufba.stock_control.dtos.products.CreateProductRequest;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.services.ProductsService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;

@@ -55,8 +55,8 @@ public class ProductsService {
   }
 
   public List<Product> listProducts() {
-    
-    return productsRepository.findAll();
+    List<Product> products = productsRepository.findAll();
+    return products;
   }
 
 }

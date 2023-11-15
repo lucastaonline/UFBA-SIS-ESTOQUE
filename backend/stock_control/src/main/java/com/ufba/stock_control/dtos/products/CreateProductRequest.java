@@ -2,7 +2,7 @@ package com.ufba.stock_control.dtos.products;
 
 import com.ufba.stock_control.entities.ProductCategory;
 import io.micrometer.common.lang.Nullable;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class CreateProductRequest {
+public class CreateProductRequest {
   
-  @NotNull
+  @NotBlank
   String productName;
-  @NotNull
+  @NotBlank
   Double price;
   @Nullable
   String description;
-  @NotNull
+  @NotBlank
   Integer stock;
-  @NotNull
+  @NotBlank
   ProductCategory category;
 }
