@@ -80,15 +80,15 @@ public class TransactionsService {
         throw new NotFoundException("Produto não encontrado");
       }
 
-      if (foundProduct.getStock() < item.quantity()) {
-        throw new ConflictException("Produto sem estoque no momento:" + foundProduct.getName());
-      }
 
       unitaryPrice = foundProduct.getPrice() * item.quantity();
 
       if (foundTransactionType.getDirection() == TransactionDirection.INLET) {
         foundProduct.setStock(foundProduct.getStock() + item.quantity());
       } else {
+        if (foundProduct.getStock() < item.quantity()) {
+          throw new ConflictException("Produto sem estoque no momento:" + foundProduct.getName());
+        }
         foundProduct.setStock(foundProduct.getStock() - item.quantity());
       }
 
