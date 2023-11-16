@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Component
 public interface TransactionsRepository extends JpaRepository<Transaction, UUID> {
-  List<Transaction> findAllByUserId(UUID userId);
+  List<Transaction> findAllWithProductOrdersByUserId(UUID userId);
 }

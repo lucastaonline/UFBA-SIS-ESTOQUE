@@ -3,6 +3,7 @@ package com.ufba.stock_control.services;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionItemRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
+import com.ufba.stock_control.dtos.transactions.CreatedTransactionResponse;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.ProductOrder;
 import com.ufba.stock_control.entities.Transaction;
@@ -63,6 +64,15 @@ public class TransactionsService {
     List<ProductOrder> productOrders = new ArrayList<>();
     TransactionType foundTransactionType = this.transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId());
     
+
+    Transaction createdTransaction = Transaction.builder()
+      .transactionType(foundTransactionType)
+      .user(getLoggedUserDetails())
+      .value(transactionValue)
+      .createdAt(new Date())
+      .updateAt(new Date())
+      .build();
+
     for (CreateTransactionItemRequest item : createTransactionRequest.getItems()) {
       Double unitaryPrice;
       Product foundProduct = productsRepository.findOneById(item.productId());
@@ -86,26 +96,17 @@ public class TransactionsService {
         .product(foundProduct)
         .value(unitaryPrice)
         .quantity(item.quantity())
+        .transaction(createdTransaction)
         .build();
       
       transactionValue += unitaryPrice;
       
       productOrders.add(createdProductOrder);
       this.productsRepository.save(foundProduct);
-      this.productsOrderRepository.save(createdProductOrder);
     }
-    
-    Transaction createdTransaction = Transaction.builder()
-      .productOrders(productOrders)
-      .transactionType(transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId()))
-      .user(getLoggedUserDetails())
-      .value(transactionValue)
-      .createdAt(new Date())
-      .updateAt(new Date())
-      .build();
-
-    
+    createdTransaction.setValue(transactionValue);
     transactionsRepository.save(createdTransaction);
+    productsOrderRepository.saveAll(productOrders);
 
     return CreateTransactionResponse.builder()
         .id(createdTransaction.getId())
@@ -133,8 +134,11 @@ public class TransactionsService {
         .build();
   }
 
-  public List<Transaction> listTransactions() {
-    return transactionsRepository.findAllByUserId(getLoggedUserDetails().getId());
+  public List<CreatedTransactionResponse> listTransactions() {
+    List<Transaction> transactions =  transactionsRepository.findAllWithProductOrdersByUserId(getLoggedUserDetails().getId());
+    return transactions.stream()
+      .map(transactionMapper::toTransactionTransacionResponse)
+      .toList();
   }
   
   public List<TransactionType> listAllTransactionTypes() {

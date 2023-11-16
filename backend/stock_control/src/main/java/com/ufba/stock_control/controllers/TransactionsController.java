@@ -2,6 +2,7 @@ package com.ufba.stock_control.controllers;
 
 import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
+import com.ufba.stock_control.dtos.transactions.CreatedTransactionResponse;
 import com.ufba.stock_control.entities.Transaction;
 import com.ufba.stock_control.entities.TransactionType;
 import com.ufba.stock_control.services.TransactionsService;
@@ -38,7 +39,7 @@ public class TransactionsController {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.findTransaction(id));
   }
   @GetMapping(consumes = MediaType.ALL_VALUE)
-  public ResponseEntity<List<Transaction>> findAllTransactions() {
+  public ResponseEntity<List<CreatedTransactionResponse>> findAllTransactions() {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.listTransactions());
   }
   @DeleteMapping(value = "/{id}", consumes = MediaType.ALL_VALUE)

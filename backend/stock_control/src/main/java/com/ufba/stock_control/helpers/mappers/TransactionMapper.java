@@ -1,6 +1,7 @@
 package com.ufba.stock_control.helpers.mappers;
 
 import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
+import com.ufba.stock_control.dtos.transactions.CreatedTransactionResponse;
 import com.ufba.stock_control.entities.Transaction;
 import com.ufba.stock_control.entities.User;
 import com.ufba.stock_control.repositories.TransactionTypeRepository;
@@ -18,6 +19,13 @@ public class TransactionMapper {
     transaction.setTransactionType(transactionTypeRepository.findOneById(createdTransaction.getTransactionTypeId()));
     transaction.setUser(user);
     return transaction;
+  }
+  public CreatedTransactionResponse toTransactionTransacionResponse(Transaction transaction) {
+    return CreatedTransactionResponse.builder()
+      .transactionId(transaction.getId())
+      .finalValue(transaction.getValue())
+      .productOrders(transaction.getProductOrders())
+      .build();
   }
 
 }
