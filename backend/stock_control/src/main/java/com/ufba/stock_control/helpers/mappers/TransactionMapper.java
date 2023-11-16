@@ -22,9 +22,12 @@ public class TransactionMapper {
   }
   public CreatedTransactionResponse toTransactionTransacionResponse(Transaction transaction) {
     return CreatedTransactionResponse.builder()
+      .transactionTypeDirection(transaction.getTransactionType().getDirection())
+      .transactionTypeDescription(transaction.getTransactionType().getDescription())
       .transactionId(transaction.getId())
       .finalValue(transaction.getValue())
       .productOrders(transaction.getProductOrders())
+      .createdAt(transaction.getCreatedAt())
       .build();
   }
 
