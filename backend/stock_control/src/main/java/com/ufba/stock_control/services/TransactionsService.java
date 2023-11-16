@@ -3,6 +3,7 @@ package com.ufba.stock_control.services;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionItemRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
+import com.ufba.stock_control.dtos.transactions.CreatedTransactionResponse;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.ProductOrder;
 import com.ufba.stock_control.entities.Transaction;
@@ -133,9 +134,11 @@ public class TransactionsService {
         .build();
   }
 
-  public List<Transaction> listTransactions() {
+  public List<CreatedTransactionResponse> listTransactions() {
     List<Transaction> transactions =  transactionsRepository.findAllWithProductOrdersByUserId(getLoggedUserDetails().getId());
-    return transactions;
+    return transactions.stream()
+      .map(transactionMapper::toTransactionTransacionResponse)
+      .toList();
   }
   
   public List<TransactionType> listAllTransactionTypes() {
