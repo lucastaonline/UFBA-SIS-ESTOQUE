@@ -63,6 +63,20 @@ public class TransactionsService {
     List<ProductOrder> productOrders = new ArrayList<>();
     TransactionType foundTransactionType = this.transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId());
     
+
+    Transaction createdTransaction = Transaction.builder()
+      .transactionType(foundTransactionType)
+      .user(getLoggedUserDetails())
+      .value(transactionValue)
+      .createdAt(new Date())
+      .updateAt(new Date())
+      .build();
+
+    
+    transactionsRepository.save(createdTransaction);
+
+
+
     for (CreateTransactionItemRequest item : createTransactionRequest.getItems()) {
       Double unitaryPrice;
       Product foundProduct = productsRepository.findOneById(item.productId());
@@ -86,6 +100,7 @@ public class TransactionsService {
         .product(foundProduct)
         .value(unitaryPrice)
         .quantity(item.quantity())
+        .transaction(createdTransaction)
         .build();
       
       transactionValue += unitaryPrice;
@@ -95,18 +110,6 @@ public class TransactionsService {
       this.productsOrderRepository.save(createdProductOrder);
     }
     
-    Transaction createdTransaction = Transaction.builder()
-      .productOrders(productOrders)
-      .transactionType(transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId()))
-      .user(getLoggedUserDetails())
-      .value(transactionValue)
-      .createdAt(new Date())
-      .updateAt(new Date())
-      .build();
-
-    
-    transactionsRepository.save(createdTransaction);
-
     return CreateTransactionResponse.builder()
         .id(createdTransaction.getId())
         .message("Pedido processado com sucesso")

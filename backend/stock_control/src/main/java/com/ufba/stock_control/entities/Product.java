@@ -27,7 +27,4 @@ public class Product {
     private String description;
     @Column
     private ProductCategory categories;
-    @ManyToOne()
-    @JoinColumn(name =  "product_order_id")
-    private ProductOrder productOrder;
 }

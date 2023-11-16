@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +25,9 @@ public class ProductOrder {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-  @OneToMany(mappedBy = "productOrder")
-  private List<Product> product;
+  @ManyToOne()
+  @JoinColumn(name = "product_id")
+  private Product product;
   @Column
   private Integer quantity;
   @Column

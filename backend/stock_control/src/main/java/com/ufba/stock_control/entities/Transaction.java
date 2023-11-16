@@ -38,7 +38,7 @@ public class Transaction {
   @OneToMany(mappedBy = "transaction")
   private List<ProductOrder> productOrders;
   @Column
-  private Double value = 0.0;
+  private Double value;
   @CreatedDate
   @Column(name = "created_at")
   private Date createdAt;
