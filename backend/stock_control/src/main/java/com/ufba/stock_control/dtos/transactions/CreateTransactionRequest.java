@@ -17,7 +17,5 @@ public class CreateTransactionRequest {
   @NotNull
   UUID transactionTypeId;
   @NotNull
-  UUID userId;
-  @NotNull
   List<CreateTransactionItemRequest> items;
 }
