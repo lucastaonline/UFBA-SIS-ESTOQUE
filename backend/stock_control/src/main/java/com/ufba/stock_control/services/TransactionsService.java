@@ -11,6 +11,7 @@ import com.ufba.stock_control.entities.User;
 import com.ufba.stock_control.exceptions.ConflictException;
 import com.ufba.stock_control.exceptions.NotFoundException;
 import com.ufba.stock_control.helpers.mappers.TransactionMapper;
+import com.ufba.stock_control.repositories.ProductsOrderRepository;
 import com.ufba.stock_control.repositories.ProductsRepository;
 import com.ufba.stock_control.repositories.TransactionTypeRepository;
 import com.ufba.stock_control.repositories.TransactionsRepository;
@@ -31,18 +32,21 @@ public class TransactionsService {
   private final TransactionsRepository transactionsRepository;
   private final ProductsRepository productsRepository;
   private final TransactionTypeRepository transactionTypeRepository;
+  private final ProductsOrderRepository productsOrderRepository;
  
 
   public TransactionsService(
       TransactionMapper transactionMapper,
       TransactionsRepository transactionsRepository,
       ProductsRepository productsRepository,
-      TransactionTypeRepository transactionTypeRepository
+      TransactionTypeRepository transactionTypeRepository,
+      ProductsOrderRepository productsOrderRepository
   ) {
     this.transactionMapper = transactionMapper;
     this.transactionsRepository = transactionsRepository;
     this.productsRepository = productsRepository;
     this.transactionTypeRepository = transactionTypeRepository;
+    this.productsOrderRepository =  productsOrderRepository;
   }
 
   private User getLoggedUserDetails() {
@@ -74,12 +78,14 @@ public class TransactionsService {
       ProductOrder createdProductOrder = ProductOrder.builder()
         .product(foundProduct)
         .value(unitaryPrice)
+        .quantity(item.quantity())
         .build();
       
       transactionValue += unitaryPrice;
       
       productOrders.add(createdProductOrder);
       this.productsRepository.save(foundProduct);
+      this.productsOrderRepository.save(createdProductOrder);
     }
     
     Transaction createdTransaction = Transaction.builder()

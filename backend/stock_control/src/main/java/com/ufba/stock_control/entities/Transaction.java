@@ -42,8 +42,8 @@ public class Transaction {
   private Double value = 0.0;
   @CreatedDate
   @Column(name = "created_at")
-  private Date createdAt;
+  private Date createdAt = new Date();
   @LastModifiedDate
   @Column(name = "updated_at")
-  private Date updateAt;
+  private Date updateAt =  new Date();
 }
