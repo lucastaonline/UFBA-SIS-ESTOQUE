@@ -1,4 +1,4 @@
-import type { PRODUCT_CATEGORY } from '@/enums/categoria_produto'
+import type { PRODUCT_CATEGORY } from '@/enums/product_category'
 
 export type Produto = {
   id: string

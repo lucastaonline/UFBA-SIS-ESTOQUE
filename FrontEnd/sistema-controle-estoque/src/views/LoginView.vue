@@ -4,19 +4,14 @@ import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
 import { useRouter } from 'vue-router'
-import type { LoginResponse } from '@/types/requisition_models/users'
+import type { LoginRequest, LoginResponse } from '@/types/requisition_models/users'
 import type { AxiosResponse } from 'axios'
 
 const router = useRouter()
 
-const userLogin = reactive({
-  user: null,
-  password: null
-})
-
-const informacoesToast = reactive({
-  titulo: '',
-  mensagem: ''
+const createUserRequest = reactive<LoginRequest>({
+  username: '',
+  password: ''
 })
 
 const loggingIn = ref(false)
@@ -27,10 +22,10 @@ function login() {
   var authStore = useAuthStore()
 
   if (
-    userLogin.user == null ||
-    userLogin.user == '' ||
-    userLogin.password == null ||
-    userLogin.password == ''
+    createUserRequest.username == null ||
+    createUserRequest.username == '' ||
+    createUserRequest.password == null ||
+    createUserRequest.password == ''
   ) {
     loggingIn.value = false
     toastStore.showMessage(
@@ -43,13 +38,13 @@ function login() {
   }
 
   httpClient
-    .post('login', userLogin)
+    .post('auth/login', createUserRequest)
     .then((response: AxiosResponse<LoginResponse>) => {
       loggingIn.value = false
 
       if (response.status == 200) {
         authStore.setToken(response.data.token)
-        authStore.setUser(userLogin)
+        authStore.setUser({ username: createUserRequest.username })
         router.push({ name: 'home' })
       } else {
         toastStore.showMessage(
@@ -91,7 +86,11 @@ function login() {
         <div class="form-fields">
           <div class="form-group">
             <label>Usuário</label>
-            <input class="form-control" placeholder="Nome de usuário" v-model="userLogin.user" />
+            <input
+              class="form-control"
+              placeholder="Nome de usuário"
+              v-model="createUserRequest.username"
+            />
           </div>
           <div class="form-group">
             <label>Senha</label>
@@ -99,7 +98,7 @@ function login() {
               type="password"
               class="form-control"
               placeholder="Senha"
-              v-model="userLogin.password"
+              v-model="createUserRequest.password"
             />
           </div>
         </div>
@@ -115,7 +114,7 @@ function login() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .login {
   display: flex;
   flex-wrap: wrap;

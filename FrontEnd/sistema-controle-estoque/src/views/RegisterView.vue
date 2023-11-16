@@ -45,11 +45,11 @@ function register() {
   }
 
   httpClient
-    .post('auth/createUser', createUserRequest)
+    .post('auth/create-user', createUserRequest)
     .then((response: AxiosResponse<CreateUserResponse>) => {
       registering.value = false
 
-      if (response.status == 200) {
+      if (response.status == 201) {
         router.push({ name: 'login' })
         toastStore.showMessage('success', 'Sucesso!', 'O usuário foi cadastrado com sucesso.')
       } else {
@@ -74,14 +74,14 @@ function register() {
 </script>
 
 <template>
-  <div class="login">
+  <div class="register">
     <div class="header y-5 text-center">
       <div class="row">
         <h1 class="fw-light">Cadastro de usuário | VitaSaúde</h1>
         <p class="lead text-muted">Preencha seus dados e cadastre-se</p>
       </div>
     </div>
-    <div class="login-form-container">
+    <div class="register-form-container">
       <div class="bg-light p-5 rounded">
         <div class="form-fields">
           <div class="form-group">
@@ -138,8 +138,8 @@ function register() {
   </div>
 </template>
 
-<style>
-.login {
+<style scoped>
+.register {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -152,7 +152,7 @@ function register() {
   width: 100%;
 }
 
-.login-form-container {
+.register-form-container {
   width: 30rem;
 }
 

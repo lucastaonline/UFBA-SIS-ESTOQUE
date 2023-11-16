@@ -1,6 +1,6 @@
-import type { PRODUCT_CATEGORY } from '@/enums/categoria_produto'
+import type { PRODUCT_CATEGORY } from '@/enums/product_category'
 
-type CreateProductRequest = {
+type PersistProductRequest = {
   productName: string
   price: number
   description: string
@@ -8,7 +8,7 @@ type CreateProductRequest = {
   category: PRODUCT_CATEGORY
 }
 
-type CreateProductResponse = {
+type PersistProductResponse = {
   id: string
   productName: string
   price: number
@@ -17,4 +17,4 @@ type CreateProductResponse = {
   category: PRODUCT_CATEGORY
 }
 
-export type { CreateProductRequest, CreateProductResponse }
+export type { PersistProductRequest, PersistProductResponse }
