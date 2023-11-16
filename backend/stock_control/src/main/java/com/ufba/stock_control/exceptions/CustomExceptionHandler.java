@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.ufba.stock_control.dtos.errors.ValidationErrorResponse;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.ufba.stock_control.dtos.errors.ErrorResponse;
 import com.ufba.stock_control.dtos.errors.FieldErrorResponse;
 
@@ -87,4 +90,42 @@ public class CustomExceptionHandler {
               .message(ex.getMessage()).build());
   }
 
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorResponse> handleDataIntegrityViolationError(DataIntegrityViolationException ex) {
+    return ResponseEntity
+      .status(HttpStatus.BAD_REQUEST)
+      .body(
+        ErrorResponse.builder()
+        .timeStamp(System.currentTimeMillis())
+        .status(HttpStatus.BAD_REQUEST.value())
+        .message("Erro ao executar ação por favor contate o admnistrador do sistema")
+        .build()
+      );
+  }
+
+  @ExceptionHandler(UsernameNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleUserDetailsNotFoundError(UsernameNotFoundException ex) {
+    return ResponseEntity
+      .status(HttpStatus.NOT_FOUND)
+      .body(
+        ErrorResponse.builder()
+        .timeStamp(System.currentTimeMillis())
+        .status(HttpStatus.NOT_FOUND.value())
+        .message("Erro ao carregar dados de usuário")
+        .build()
+      );
+  }
+  
+  @ExceptionHandler(TokenExpiredException.class)
+  public ResponseEntity<ErrorResponse> handleTokenExpirationError(TokenExpiredException ex) {
+    return ResponseEntity
+      .status(HttpStatus.UNAUTHORIZED)
+      .body(
+        ErrorResponse.builder()
+        .timeStamp(System.currentTimeMillis())
+        .status(HttpStatus.UNAUTHORIZED.value())
+        .message("Token expirado")
+        .build()
+      );
+  }
 }

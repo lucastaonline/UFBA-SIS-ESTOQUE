@@ -1,5 +1,6 @@
 package com.ufba.stock_control.repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,8 +10,8 @@ import com.ufba.stock_control.entities.User;
 
 @Repository
 public interface UsersRepository extends JpaRepository<User, UUID>{
-  User findOneByUserName(String userName);
-  User findOneByUserNameOrEmail(String userName, String email);
-  User findOneById(UUID id);
+  Optional<User> findOneByUserName(String userName) ;
+  Optional<User> findOneByUserNameOrEmail(String userName, String email);
+  Optional<User> findOneById(UUID id);
   
 }
