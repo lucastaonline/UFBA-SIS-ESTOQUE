@@ -27,11 +27,11 @@ public class ProductsService {
     Product createdProduct = this.productsRepository.save(productsMapper.toProductEntity(createProductRequest));
     return CreateProductResponse.builder()
       .id(createdProduct.getId())
-      .productName(createdProduct.getName())
+      .name(createdProduct.getName())
       .description(createdProduct.getDescription())
       .price(createdProduct.getPrice())
       .stock(createdProduct.getStock())
-      .category(createdProduct.getCategories())
+      .categories(createdProduct.getCategories())
       .build();
     
   }
@@ -40,11 +40,11 @@ public class ProductsService {
     Product createdProduct = productsRepository.findById(id).orElseThrow(()-> new RuntimeException());
     return CreateProductResponse.builder()
       .id(createdProduct.getId())
-      .productName(createdProduct.getName())
+      .name(createdProduct.getName())
       .description(createdProduct.getDescription())
       .price(createdProduct.getPrice())
       .stock(createdProduct.getStock())
-      .category(createdProduct.getCategories())
+      .categories(createdProduct.getCategories())
       .build();
   }
 
@@ -70,11 +70,11 @@ public class ProductsService {
     Product createdProduct = productsRepository.findProductByName(name);
     return CreateProductResponse.builder()
       .id(createdProduct.getId())
-      .productName(createdProduct.getName())
+      .name(createdProduct.getName())
       .description(createdProduct.getDescription())
       .price(createdProduct.getPrice())
       .stock(createdProduct.getStock())
-      .category(createdProduct.getCategories())
+      .categories(createdProduct.getCategories())
       .build();
   }
 

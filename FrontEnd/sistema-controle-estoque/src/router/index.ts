@@ -33,7 +33,8 @@ const router = createRouter({
       component: ProductsView
     },
     {
-      path: '/products-form',
+      path: '/products-form/:productId',
+      props: true,
       name: 'products-form',
       component: ProductsFormView
     }

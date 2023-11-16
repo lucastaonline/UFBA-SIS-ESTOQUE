@@ -63,6 +63,8 @@ onMounted(() => {
             <th>Preço</th>
             <th>Descrição</th>
             <th>Categoria</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -72,6 +74,16 @@ onMounted(() => {
             <td>{{ produto.price }} R$</td>
             <td>{{ produto.description }}</td>
             <td>{{ produto.categories }}</td>
+            <td>
+              <a class="btn btn-primary" :href="`/products-form/${produto.id}`"
+                ><font-awesome-icon :icon="['fas', 'fa-edit']"
+              /></a>
+            </td>
+            <td>
+              <button class="btn btn-danger">
+                <font-awesome-icon :icon="['fas', 'fa-times']" />
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

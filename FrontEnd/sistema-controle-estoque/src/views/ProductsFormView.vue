@@ -25,11 +25,11 @@ const persistProductRequest = ref<PersistProductRequest>({
   price: 0.0,
   description: '',
   stock: 0.0,
-  category: PRODUCT_CATEGORY.MEDICAMENTOS
+  categories: PRODUCT_CATEGORY.MEDICAMENTOS
 })
 
 const PRODUCT_CATEGORY_KEYS = computed(() =>
-  Object.keys(PRODUCT_CATEGORY).filter((v) => !isNaN(Number(v)))
+  Object.keys(PRODUCT_CATEGORY).filter((v) => isNaN(Number(v)))
 )
 
 onMounted(() => {
@@ -41,7 +41,14 @@ onMounted(() => {
         }
       })
       .then((response: AxiosResponse<Produto>) => {
-        if (response.status != 200) {
+        if (response.status == 200) {
+          const produto = response.data
+          persistProductRequest.value.productName = produto.name
+          persistProductRequest.value.price = produto.price
+          persistProductRequest.value.description = produto.description
+          persistProductRequest.value.stock = produto.stock
+          persistProductRequest.value.categories = produto.categories
+        } else {
           toastStore.showMessage(
             'danger',
             'Erro!',
@@ -156,7 +163,7 @@ function saveProduct() {
               </div>
               <div class="form-group">
                 <label>Categoria</label>
-                <select class="form-control" v-model="persistProductRequest.category">
+                <select class="form-control" v-model="persistProductRequest.categories">
                   <option v-for="productCategory in PRODUCT_CATEGORY_KEYS" :value="productCategory">
                     {{ PRODUCT_CATEGORY_LABEL.get(Number(productCategory)) }}
                   </option>

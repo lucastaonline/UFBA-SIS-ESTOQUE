@@ -5,7 +5,7 @@ type PersistProductRequest = {
   price: number
   description: string
   stock: number
-  category: PRODUCT_CATEGORY
+  categories: PRODUCT_CATEGORY
 }
 
 type PersistProductResponse = {
@@ -14,7 +14,7 @@ type PersistProductResponse = {
   price: number
   description: string
   stock: number
-  category: PRODUCT_CATEGORY
+  categories: PRODUCT_CATEGORY
 }
 
 export type { PersistProductRequest, PersistProductResponse }
