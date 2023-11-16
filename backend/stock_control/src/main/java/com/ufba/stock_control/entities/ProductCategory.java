@@ -2,19 +2,19 @@ package com.ufba.stock_control.entities;
 
 public enum ProductCategory {
 
-  MEDICAMENTOS("medicamentos"),
-  VITAMINAS("vitaminas"),
-  SUPLEMENTOS("suplementos"),
-  HIGIENE("higiene"),
-  COSMETICOS("cosmeticos");
+  MEDICAMENTOS(0),
+  VITAMINAS(1),
+  SUPLEMENTOS(2),
+  HIGIENE(3),
+  COSMETICOS(4);
 
-  private String category;
+  private Integer category;
 
-  ProductCategory(String category) {
+  ProductCategory(Integer category) {
     this.category = category;
   }
 
-  public String getCategory() {
+  public Integer getCategory() {
     return this.category;
   }
   
