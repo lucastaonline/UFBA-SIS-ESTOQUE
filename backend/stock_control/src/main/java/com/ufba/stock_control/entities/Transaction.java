@@ -35,15 +35,14 @@ public class Transaction {
   @ManyToOne()
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
-  @OneToMany()
-  @JoinColumn(name = "product_order_id", referencedColumnName = "id")
+  @OneToMany(mappedBy = "transaction")
   private List<ProductOrder> productOrders;
   @Column
   private Double value = 0.0;
   @CreatedDate
   @Column(name = "created_at")
-  private Date createdAt = new Date();
+  private Date createdAt;
   @LastModifiedDate
   @Column(name = "updated_at")
-  private Date updateAt =  new Date();
+  private Date updateAt;
 }
