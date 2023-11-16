@@ -6,6 +6,7 @@ import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.ProductOrder;
 import com.ufba.stock_control.entities.Transaction;
+import com.ufba.stock_control.entities.TransactionDirection;
 import com.ufba.stock_control.entities.TransactionType;
 import com.ufba.stock_control.entities.User;
 import com.ufba.stock_control.exceptions.ConflictException;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class TransactionsService {
@@ -51,7 +53,7 @@ public class TransactionsService {
 
   private User getLoggedUserDetails() {
     Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
-    User userDetails =  (User) authentication.getPrincipal();
+    User userDetails = (User) authentication.getPrincipal();
     return userDetails;
   }
 
@@ -59,6 +61,7 @@ public class TransactionsService {
   public CreateTransactionResponse createTransaction(CreateTransactionRequest createTransactionRequest) {
     Double transactionValue = 0.0;
     List<ProductOrder> productOrders = new ArrayList<>();
+    TransactionType foundTransactionType = this.transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId());
     
     for (CreateTransactionItemRequest item : createTransactionRequest.getItems()) {
       Double unitaryPrice;
@@ -73,7 +76,11 @@ public class TransactionsService {
 
       unitaryPrice = foundProduct.getPrice() * item.quantity();
 
-      foundProduct.setStock(foundProduct.getStock() - item.quantity());
+      if (foundTransactionType.getDirection() == TransactionDirection.INLET) {
+        foundProduct.setStock(foundProduct.getStock() + item.quantity());
+      } else {
+        foundProduct.setStock(foundProduct.getStock() - item.quantity());
+      }
 
       ProductOrder createdProductOrder = ProductOrder.builder()
         .product(foundProduct)
@@ -93,6 +100,8 @@ public class TransactionsService {
       .transactionType(transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId()))
       .user(getLoggedUserDetails())
       .value(transactionValue)
+      .createdAt(new Date())
+      .updateAt(new Date())
       .build();
 
     
