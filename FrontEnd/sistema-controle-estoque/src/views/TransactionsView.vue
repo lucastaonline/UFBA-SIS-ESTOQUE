@@ -94,7 +94,6 @@ function closeProductsModal() {
             <th>Sentido</th>
             <th>Produtos</th>
             <th>Preço total</th>
-            <th>Data da movimentação</th>
           </tr>
         </thead>
         <tbody>
@@ -122,11 +121,6 @@ function closeProductsModal() {
               </button>
             </td>
             <td style="white-space: nowrap">{{ transaction.value.toFixed(2) }} R$</td>
-            <td>
-              {{ transaction.createdAt.getDay() }}/{{ transaction.createdAt.getMonth() }}/{{
-                transaction.createdAt.getFullYear()
-              }}
-            </td>
           </tr>
         </tbody>
       </table>
