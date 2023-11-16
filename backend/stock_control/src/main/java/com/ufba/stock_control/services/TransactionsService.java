@@ -72,11 +72,6 @@ public class TransactionsService {
       .updateAt(new Date())
       .build();
 
-    
-    transactionsRepository.save(createdTransaction);
-
-
-
     for (CreateTransactionItemRequest item : createTransactionRequest.getItems()) {
       Double unitaryPrice;
       Product foundProduct = productsRepository.findOneById(item.productId());
@@ -107,9 +102,11 @@ public class TransactionsService {
       
       productOrders.add(createdProductOrder);
       this.productsRepository.save(foundProduct);
-      this.productsOrderRepository.save(createdProductOrder);
     }
-    
+    createdTransaction.setValue(transactionValue);
+    transactionsRepository.save(createdTransaction);
+    productsOrderRepository.saveAll(productOrders);
+
     return CreateTransactionResponse.builder()
         .id(createdTransaction.getId())
         .message("Pedido processado com sucesso")
@@ -137,7 +134,8 @@ public class TransactionsService {
   }
 
   public List<Transaction> listTransactions() {
-    return transactionsRepository.findAllByUserId(getLoggedUserDetails().getId());
+    List<Transaction> transactions =  transactionsRepository.findAllWithProductOrdersByUserId(getLoggedUserDetails().getId());
+    return transactions;
   }
   
   public List<TransactionType> listAllTransactionTypes() {

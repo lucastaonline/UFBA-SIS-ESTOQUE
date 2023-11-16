@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +38,8 @@ public class Transaction {
   @ManyToOne()
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
-  @OneToMany(mappedBy = "transaction")
+  @JsonBackReference
+  @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER)
   private List<ProductOrder> productOrders;
   @Column
   private Double value;

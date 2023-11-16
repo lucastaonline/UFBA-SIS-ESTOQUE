@@ -2,6 +2,9 @@ package com.ufba.stock_control.entities;
 
 
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -32,6 +35,7 @@ public class ProductOrder {
   private Integer quantity;
   @Column
   private Double value;
+  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "transaction_id")
   private Transaction transaction;
