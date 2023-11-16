@@ -14,11 +14,9 @@ import com.ufba.stock_control.helpers.mappers.TransactionMapper;
 import com.ufba.stock_control.repositories.ProductsRepository;
 import com.ufba.stock_control.repositories.TransactionTypeRepository;
 import com.ufba.stock_control.repositories.TransactionsRepository;
-import com.ufba.stock_control.repositories.UsersRepository;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +37,7 @@ public class TransactionsService {
       TransactionMapper transactionMapper,
       TransactionsRepository transactionsRepository,
       ProductsRepository productsRepository,
-      TransactionTypeRepository transactionTypeRepository, 
-      UsersRepository usersRepository
+      TransactionTypeRepository transactionTypeRepository
   ) {
     this.transactionMapper = transactionMapper;
     this.transactionsRepository = transactionsRepository;
@@ -48,42 +45,47 @@ public class TransactionsService {
     this.transactionTypeRepository = transactionTypeRepository;
   }
 
+  private User getLoggedUserDetails() {
+    Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+    User userDetails =  (User) authentication.getPrincipal();
+    return userDetails;
+  }
+
+
   public CreateTransactionResponse createTransaction(CreateTransactionRequest createTransactionRequest) {
     Double transactionValue = 0.0;
     List<ProductOrder> productOrders = new ArrayList<>();
-    Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
-    User userDetails =  (User) authentication.getPrincipal();
-
+    
     for (CreateTransactionItemRequest item : createTransactionRequest.getItems()) {
-      Optional<Product> foundProduct = productsRepository.findById(item.productId());
-      Double unitaryPrice = 0.0;
-      if (!foundProduct.isPresent()) {
+      Double unitaryPrice;
+      Product foundProduct = productsRepository.findOneById(item.productId());
+      if (foundProduct == null) {
         throw new NotFoundException("Produto não encontrado");
       }
 
-      if (foundProduct.get().getStock() > item.quantity()) {
-        throw new ConflictException("Produto sem estoque no momento:" + foundProduct.get().getName());
+      if (foundProduct.getStock() < item.quantity()) {
+        throw new ConflictException("Produto sem estoque no momento:" + foundProduct.getName());
       }
 
-      unitaryPrice = foundProduct.get().getPrice() * item.quantity();
+      unitaryPrice = foundProduct.getPrice() * item.quantity();
 
-      foundProduct.get().setStock(foundProduct.get().getStock() - item.quantity());
+      foundProduct.setStock(foundProduct.getStock() - item.quantity());
 
       ProductOrder createdProductOrder = ProductOrder.builder()
-        .product(foundProduct.get())
+        .product(foundProduct)
         .value(unitaryPrice)
         .build();
       
       transactionValue += unitaryPrice;
       
       productOrders.add(createdProductOrder);
-      this.productsRepository.save(foundProduct.get());
+      this.productsRepository.save(foundProduct);
     }
     
     Transaction createdTransaction = Transaction.builder()
       .productOrders(productOrders)
       .transactionType(transactionTypeRepository.findOneById(createTransactionRequest.getTransactionTypeId()))
-      .user(userDetails)
+      .user(getLoggedUserDetails())
       .value(transactionValue)
       .build();
 
@@ -119,9 +121,7 @@ public class TransactionsService {
   }
 
   public List<Transaction> listTransactions() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    User userDetails =  (User) authentication.getPrincipal();
-    return transactionsRepository.findAllByUserId(userDetails.getId());
+    return transactionsRepository.findAllByUserId(getLoggedUserDetails().getId());
   }
   
   public List<TransactionType> listAllTransactionTypes() {

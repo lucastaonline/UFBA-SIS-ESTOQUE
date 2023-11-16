@@ -8,5 +8,6 @@ import com.ufba.stock_control.entities.Product;
 
 public interface ProductsRepository extends JpaRepository<Product, UUID> {
   Product findProductByName(String name);
+  Product findOneById(UUID id);
   
 }
