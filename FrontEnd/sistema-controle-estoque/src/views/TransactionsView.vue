@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MainLayoutComponentVue from '@/components/MainLayoutComponent.vue'
 import type { Transaction } from '@/types/transaction'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import type { AxiosError, AxiosResponse } from 'axios'
@@ -39,6 +39,10 @@ function getTransactions() {
     .then((response: AxiosResponse<Transaction[]>) => {
       if (response.status == 200) {
         transactions.value = response.data
+
+        transactions.value.forEach((x) => {
+          x.createdAt = new Date(x.createdAt.toString())
+        })
       } else {
         toastStore.showMessage(
           'danger',
@@ -72,6 +76,20 @@ function closeProductsModal() {
   productOrdersModal.value = []
   modal.value?.hide()
 }
+
+const sortedTransactions = computed(() => {
+  const sortFunction = (a: Transaction, b: Transaction) => {
+    if (a.createdAt > b.createdAt) {
+      return -1
+    } else if (a.createdAt < b.createdAt) {
+      return 1
+    }
+
+    return 0
+  }
+
+  return transactions.value.sort(sortFunction)
+})
 </script>
 
 <template>
@@ -94,21 +112,22 @@ function closeProductsModal() {
             <th>Sentido</th>
             <th>Produtos</th>
             <th>Preço total</th>
+            <th>Data da movimentação</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="transaction in transactions">
+          <tr v-for="transaction in sortedTransactions">
             <td>
               {{
                 TRANSACTION_TYPE_DESCRIPTION_LABEL.get(
-                  Number(TRANSACTION_TYPE_DESCRIPTION[transaction.transactionType.description])
+                  Number(TRANSACTION_TYPE_DESCRIPTION[transaction.transactionTypeDescription])
                 )
               }}
             </td>
             <td>
               {{
                 TRANSACTION_TYPE_DIRECTION_LABEL.get(
-                  Number(TRANSACTION_TYPE_DIRECTION[transaction.transactionType.direction])
+                  Number(TRANSACTION_TYPE_DIRECTION[transaction.transactionTypeDirection])
                 )
               }}
             </td>
@@ -120,7 +139,8 @@ function closeProductsModal() {
                 <font-awesome-icon :icon="['fas', 'fa-eye']" />
               </button>
             </td>
-            <td style="white-space: nowrap">{{ transaction.value.toFixed(2) }} R$</td>
+            <td style="white-space: nowrap">{{ transaction.finalValue.toFixed(2) }} R$</td>
+            <td>{{ transaction.createdAt.toLocaleString() }}</td>
           </tr>
         </tbody>
       </table>

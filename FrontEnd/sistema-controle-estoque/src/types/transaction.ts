@@ -1,13 +1,14 @@
 import type { User } from '@/types/user'
-import type { TransactionType } from '@/types/transaction_type'
 import type { ProductOrder } from '@/types/product_order'
+import type { TRANSACTION_TYPE_DESCRIPTION } from '@/enums/transaction_type_description'
+import type { TRANSACTION_TYPE_DIRECTION } from '@/enums/transaction_type_direction'
 
 export type Transaction = {
   id: string
-  transactionType: TransactionType
+  transactionTypeDescription: TRANSACTION_TYPE_DESCRIPTION
+  transactionTypeDirection: TRANSACTION_TYPE_DIRECTION
   user: User
   productOrders: ProductOrder[]
-  value: number
+  finalValue: number
   createdAt: Date
-  updateAt: Date
 }

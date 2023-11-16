@@ -48,8 +48,7 @@ const router = createRouter({
       component: TransactionsView
     },
     {
-      path: '/transactions-form/:transactionId?',
-      props: true,
+      path: '/transactions-form',
       name: 'transactions-form',
       component: TransactionsFormView
     }

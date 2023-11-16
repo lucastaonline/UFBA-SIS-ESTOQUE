@@ -9,7 +9,7 @@ import type {
   PersistTransactionResponse
 } from '@/types/requisition_models/transactions'
 import type { AxiosError, AxiosResponse } from 'axios'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Product } from '@/types/product'
 import type { TransactionType } from '@/types/transaction_type'
@@ -22,8 +22,6 @@ import {
   TRANSACTION_TYPE_DIRECTION_LABEL,
   TRANSACTION_TYPE_DIRECTION
 } from '@/enums/transaction_type_direction'
-
-const props = defineProps(['transactionId'])
 
 const authStore = useAuthStore()
 const toastStore = useToastStore()
@@ -40,7 +38,7 @@ const transactionTypes = ref<TransactionType[]>([])
 
 function addItem() {
   persistTransactionRequest.value.items.push({
-    productId: products.value[0].id,
+    productId: sortedProducts.value[0].id,
     quantity: 1
   })
 }
@@ -116,103 +114,62 @@ function getTransactionTypes() {
 onMounted(() => {
   getProducts()
   getTransactionTypes()
-
-  if (props.transactionId) {
-    httpClient
-      .get(`transactions/${props.transactionId}`, {
-        headers: {
-          Authorization: authStore.token
-        }
-      })
-      .then((response: AxiosResponse<Transaction>) => {
-        if (response.status == 200) {
-          const transaction = response.data
-          persistTransactionRequest.value.transactionTypeId = transaction.transactionType.id
-          persistTransactionRequest.value.items = transaction.productOrders.map((x) => {
-            return {
-              productId: x.product.id,
-              quantity: x.quantity
-            }
-          })
-        } else {
-          toastStore.showMessage(
-            'danger',
-            'Erro!',
-            'Não foi obter a movimentação de estoque selecionada. Redirecionando para tela de movimentações de estoque.'
-          )
-          router.push({ name: 'transactions' })
-        }
-      })
-      .catch((error: any) => {
-        console.log(error)
-        if (error.response?.status == 401) {
-          router.push({ name: 'login', query: { sessionTimeout: 'true' } })
-        } else {
-          toastStore.showMessage(
-            'danger',
-            'Erro!',
-            'Não foi obter a movimentação de estoque selecionada. Redirecionando para tela de movimentações de estoque.'
-          )
-          router.push({ name: 'transactions' })
-        }
-      })
-  }
 })
 
 function saveTransaction() {
   creating.value = true
-  const onSuccess = (response: AxiosResponse<PersistTransactionResponse>) => {
-    creating.value = false
-    if (response.status == 200) {
-      router.push({ name: 'transactions' })
-      toastStore.showMessage(
-        'success',
-        'Sucesso!',
-        'A movimentação de estoque foi salva na base de dados.'
-      )
-    } else {
-      toastStore.showMessage(
-        'danger',
-        'Erro!',
-        'Não foi possível salvar a movimentação de estoque.'
-      )
-    }
-  }
 
-  const onError = (error: any) => {
-    creating.value = false
-    console.log(error)
+  httpClient
+    .post('transactions', persistTransactionRequest.value, {
+      headers: {
+        Authorization: authStore.token
+      }
+    })
+    .then((response: AxiosResponse<PersistTransactionResponse>) => {
+      creating.value = false
+      if (response.status == 200) {
+        router.push({ name: 'transactions' })
+        toastStore.showMessage(
+          'success',
+          'Sucesso!',
+          'A movimentação de estoque foi salva na base de dados.'
+        )
+      } else {
+        toastStore.showMessage(
+          'danger',
+          'Erro!',
+          'Não foi possível salvar a movimentação de estoque.'
+        )
+      }
+    })
+    .catch((error: any) => {
+      creating.value = false
+      console.log(error)
 
-    if (error.response?.status == 401)
-      router.push({ name: 'login', query: { sessionTimeout: 'true' } })
-    else
-      toastStore.showMessage(
-        'danger',
-        'Erro!',
-        'Não foi possível salvar a movimentação de estoque.'
-      )
-  }
-
-  if (props.transactionId) {
-    httpClient
-      .put(`transactions/${props.transactionId}`, persistTransactionRequest.value, {
-        headers: {
-          Authorization: authStore.token
-        }
-      })
-      .then(onSuccess)
-      .catch(onError)
-  } else {
-    httpClient
-      .post('transactions', persistTransactionRequest.value, {
-        headers: {
-          Authorization: authStore.token
-        }
-      })
-      .then(onSuccess)
-      .catch(onError)
-  }
+      if (error.response?.status == 401)
+        router.push({ name: 'login', query: { sessionTimeout: 'true' } })
+      else
+        toastStore.showMessage(
+          'danger',
+          'Erro!',
+          `Não foi possível salvar a movimentação de estoque: ${error.response?.data?.message}.`
+        )
+    })
 }
+
+const sortedProducts = computed(() => {
+  const sortFunction = (a: Product, b: Product) => {
+    if (a.name > b.name) {
+      return 1
+    } else if (a.name < b.name) {
+      return -1
+    }
+
+    return 0
+  }
+
+  return products.value.sort(sortFunction)
+})
 </script>
 
 <template>
@@ -260,7 +217,7 @@ function saveTransaction() {
                     <div class="form-group col-5">
                       <label>Produto</label>
                       <select class="form-control" v-model="item.productId">
-                        <option v-for="product in products" :value="product.id">
+                        <option v-for="product in sortedProducts" :value="product.id">
                           {{ product.name }}
                         </option>
                       </select>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MainLayoutComponentVue from '@/components/MainLayoutComponent.vue'
 import type { Product } from '@/types/product'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import type { Axios, AxiosError, AxiosResponse } from 'axios'
@@ -75,6 +75,20 @@ function deleteProduct(id: string) {
       })
   }
 }
+
+const sortedProducts = computed(() => {
+  const sortFunction = (a: Product, b: Product) => {
+    if (a.name > b.name) {
+      return 1
+    } else if (a.name < b.name) {
+      return -1
+    }
+
+    return 0
+  }
+
+  return products.value.sort(sortFunction)
+})
 </script>
 
 <template>
@@ -103,7 +117,7 @@ function deleteProduct(id: string) {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in products">
+          <tr v-for="product in sortedProducts">
             <td>{{ product.name }}</td>
             <td>{{ product.stock }} unidades</td>
             <td style="white-space: nowrap">{{ product.price.toFixed(2) }} R$</td>

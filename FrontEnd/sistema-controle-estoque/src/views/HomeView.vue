@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MainLayoutComponentVue from '@/components/MainLayoutComponent.vue'
 import type { Product } from '@/types/product'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import type { AxiosError, AxiosResponse } from 'axios'
@@ -44,6 +44,20 @@ onMounted(() => {
         )
     })
 })
+
+const sortedProducts = computed(() => {
+  const sortFunction = (a: Product, b: Product) => {
+    if (a.name > b.name) {
+      return 1
+    } else if (a.name < b.name) {
+      return -1
+    }
+
+    return 0
+  }
+
+  return products.value.sort(sortFunction)
+})
 </script>
 
 <template>
@@ -62,7 +76,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="produto in products">
+          <tr v-for="produto in sortedProducts">
             <td>{{ produto.name }}</td>
             <td>{{ produto.stock }} unidades</td>
           </tr>
