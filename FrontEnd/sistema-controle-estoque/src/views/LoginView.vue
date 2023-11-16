@@ -17,10 +17,12 @@ const createUserRequest = reactive<LoginRequest>({
 })
 
 const loggingIn = ref(false)
-var toastStore = useToastStore()
+const toastStore = useToastStore()
+const authStore = useAuthStore()
 
 onMounted(() => {
   if (props.sessionTimeout) {
+    authStore.clear()
     toastStore.showMessage(
       'warning',
       'Aviso!',

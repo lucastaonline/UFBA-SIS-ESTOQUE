@@ -106,7 +106,7 @@ function deleteProduct(id: string) {
           <tr v-for="product in products">
             <td>{{ product.name }}</td>
             <td>{{ product.stock }} unidades</td>
-            <td>{{ product.price }} R$</td>
+            <td style="white-space: nowrap">{{ product.price.toFixed(2) }} R$</td>
             <td>{{ product.description }}</td>
             <td>{{ PRODUCT_CATEGORY_LABEL.get(Number(PRODUCT_CATEGORY[product.categories])) }}</td>
             <td>

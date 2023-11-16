@@ -94,9 +94,7 @@ function closeProductsModal() {
             <th>Sentido</th>
             <th>Produtos</th>
             <th>Preço total</th>
-            <th>Data de criação</th>
-            <th>Data de modificação</th>
-            <th></th>
+            <th>Data da movimentação</th>
           </tr>
         </thead>
         <tbody>
@@ -123,13 +121,11 @@ function closeProductsModal() {
                 <font-awesome-icon :icon="['fas', 'fa-eye']" />
               </button>
             </td>
-            <td>{{ transaction.value.toFixed(2) }} R$</td>
-            <td>{{ transaction.createdAt }}</td>
-            <td>{{ transaction.updateAt }}</td>
+            <td style="white-space: nowrap">{{ transaction.value.toFixed(2) }} R$</td>
             <td>
-              <a class="btn btn-primary" :href="`/transactions-form/${transaction.id}`"
-                ><font-awesome-icon :icon="['fas', 'fa-edit']"
-              /></a>
+              {{ transaction.createdAt.getDay() }}/{{ transaction.createdAt.getMonth() }}/{{
+                transaction.createdAt.getFullYear()
+              }}
             </td>
           </tr>
         </tbody>
@@ -160,7 +156,9 @@ function closeProductsModal() {
                     <td>
                       {{ productOrder.product.name }}
                     </td>
-                    <td>{{ productOrder.product.price }} R$</td>
+                    <td style="white-space: nowrap">
+                      {{ productOrder.product.price.toFixed(2) }} R$
+                    </td>
                     <td>{{ productOrder.quantity }} unidades</td>
                   </tr>
                 </tbody>
