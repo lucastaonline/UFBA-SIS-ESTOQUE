@@ -1,19 +1,19 @@
 package com.ufba.stock_control.entities;
 public enum TransactionDescription {
 
-  BUY("buy"),
-  SELL("sell"),
-  CUSTOMER_CHARGEBACK("customer_chargeback"),
-  DISTRIBUTOR_CHARGEBACK("distributor_chargeback"),
-  DISCARD("discard");
+  BUY(0),
+  SELL(1),
+  CUSTOMER_CHARGEBACK(2),
+  DISTRIBUTOR_CHARGEBACK(3),
+  DISCARD(4);
 
 
-  private String direction;
-  TransactionDescription(String direction) {
+  private Integer direction;
+  TransactionDescription(Integer direction) {
     this.direction = direction;
   }
 
-  public String getDirection() {
+  public Integer getDirection() {
     return this.direction;
   }
 }

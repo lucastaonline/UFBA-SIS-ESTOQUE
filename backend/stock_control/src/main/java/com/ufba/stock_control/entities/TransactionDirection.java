@@ -2,15 +2,15 @@ package com.ufba.stock_control.entities;
 
 public enum TransactionDirection {
 
-  INLET("inlet"),
-  OUTLET("outlet");
+  INLET(0),
+  OUTLET(1);
 
-  private String direction;
-  TransactionDirection(String direction) {
+  private Integer direction;
+  TransactionDirection(Integer direction) {
     this.direction = direction;
   }
 
-  public String getDirection() {
+  public Integer getDirection() {
     return this.direction;
   }
 }
