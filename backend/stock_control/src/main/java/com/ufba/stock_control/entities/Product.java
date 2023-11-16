@@ -4,11 +4,13 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "products")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -23,6 +25,6 @@ public class Product {
     private Double price;
     @Column
     private String description;
-    @Enumerated(EnumType.STRING)
+    @Column
     private ProductCategory categories;
 }

@@ -1,10 +1,9 @@
 package com.ufba.stock_control.dtos.transactions;
 
+import java.util.List;
 
-import com.ufba.stock_control.entities.ProductCategory;
-import com.ufba.stock_control.entities.TransactionStatus;
+import com.ufba.stock_control.entities.TransactionDirection;
 import com.ufba.stock_control.entities.TransactionType;
-import io.micrometer.common.lang.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +17,9 @@ import java.util.UUID;
 public class CreateTransactionRequest {
 
   @NotNull
-  TransactionType type;
+  UUID transactionTypeId;
   @NotNull
-  TransactionStatus status;
+  UUID userId;
   @NotNull
-  UUID SellerId;
-  @NotNull
-  UUID buyerId;
+  List<CreateTransactionItemRequest> items;
 }

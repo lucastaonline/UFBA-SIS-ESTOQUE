@@ -3,9 +3,9 @@ package com.ufba.stock_control.controllers;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
 import com.ufba.stock_control.entities.Transaction;
+import com.ufba.stock_control.entities.TransactionType;
 import com.ufba.stock_control.services.TransactionsService;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,7 @@ import java.util.UUID;
 )
 @CrossOrigin(origins = "*")
 public class TransactionsController {
+  
   @Autowired
   private TransactionsService transactionsService;
 

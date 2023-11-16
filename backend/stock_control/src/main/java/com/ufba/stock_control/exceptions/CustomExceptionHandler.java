@@ -46,7 +46,7 @@ public class CustomExceptionHandler {
           .status(HttpStatus.UNAUTHORIZED)
           .body(ErrorResponse.builder()
               .timeStamp(System.currentTimeMillis())
-              .status(HttpStatus.UNAUTHORIZED.value()).message("UnauthorizedException")
+              .status(HttpStatus.UNAUTHORIZED.value())
               .build());
   }
   
@@ -58,7 +58,7 @@ public class CustomExceptionHandler {
           .status(HttpStatus.CONFLICT)
           .body(ErrorResponse.builder()
               .timeStamp(System.currentTimeMillis())
-              .status(HttpStatus.CONFLICT.value()).message("ConflictException")
+              .status(HttpStatus.CONFLICT.value())
               .message(ex.getMessage()).build());
   }
   
