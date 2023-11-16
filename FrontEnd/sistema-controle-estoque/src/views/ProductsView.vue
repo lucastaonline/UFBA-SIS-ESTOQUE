@@ -22,7 +22,7 @@ function getProducts() {
   httpClient
     .get('products', {
       headers: {
-        Authorization: authStore.token
+        Authorization: `Bearer ${authStore.token}`
       }
     })
     .then((response: AxiosResponse<Product[]>) => {
@@ -55,7 +55,7 @@ function deleteProduct(id: string) {
     httpClient
       .delete(`products/${id}`, {
         headers: {
-          Authorization: authStore.token
+          Authorization: `Bearer ${authStore.token}`
         }
       })
       .then((response: AxiosResponse) => {

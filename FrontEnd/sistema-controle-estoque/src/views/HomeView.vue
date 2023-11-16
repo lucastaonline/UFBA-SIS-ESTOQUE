@@ -17,7 +17,7 @@ onMounted(() => {
   httpClient
     .get('products', {
       headers: {
-        Authorization: authStore.token
+        Authorization: `Bearer ${authStore.token}`
       }
     })
     .then((response: AxiosResponse<Product[]>) => {

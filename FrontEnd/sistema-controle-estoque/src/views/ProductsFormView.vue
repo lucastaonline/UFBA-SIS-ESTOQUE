@@ -37,7 +37,7 @@ onMounted(() => {
     httpClient
       .get(`products/${props.productId}`, {
         headers: {
-          Authorization: authStore.token
+          Authorization: `Bearer ${authStore.token}`
         }
       })
       .then((response: AxiosResponse<Product>) => {
@@ -118,7 +118,7 @@ function saveProduct() {
     httpClient
       .put(`products/${props.productId}`, persistProductRequest.value, {
         headers: {
-          Authorization: authStore.token
+          Authorization: `Bearer ${authStore.token}`
         }
       })
       .then(onSuccess)
@@ -127,7 +127,7 @@ function saveProduct() {
     httpClient
       .post('products', persistProductRequest.value, {
         headers: {
-          Authorization: authStore.token
+          Authorization: `Bearer ${authStore.token}`
         }
       })
       .then(onSuccess)

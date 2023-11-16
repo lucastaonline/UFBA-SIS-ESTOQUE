@@ -33,7 +33,7 @@ function getTransactions() {
   httpClient
     .get('transactions', {
       headers: {
-        Authorization: authStore.token
+        Authorization: `Bearer ${authStore.token}`
       }
     })
     .then((response: AxiosResponse<Transaction[]>) => {

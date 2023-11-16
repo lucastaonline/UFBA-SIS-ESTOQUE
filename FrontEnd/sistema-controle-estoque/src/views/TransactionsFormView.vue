@@ -50,7 +50,7 @@ function getProducts() {
   httpClient
     .get('products', {
       headers: {
-        Authorization: authStore.token
+        Authorization: `Bearer ${authStore.token}`
       }
     })
     .then((response: AxiosResponse<Product[]>) => {
@@ -82,7 +82,7 @@ function getTransactionTypes() {
   httpClient
     .get('transactionTypes', {
       headers: {
-        Authorization: authStore.token
+        Authorization: `Bearer ${authStore.token}`
       }
     })
     .then((response: AxiosResponse<TransactionType[]>) => {
@@ -123,7 +123,7 @@ function saveTransaction() {
   httpClient
     .post('transactions', persistTransactionRequest.value, {
       headers: {
-        Authorization: authStore.token
+        Authorization: `Bearer ${authStore.token}`
       }
     })
     .then((response: AxiosResponse<PersistTransactionResponse>) => {

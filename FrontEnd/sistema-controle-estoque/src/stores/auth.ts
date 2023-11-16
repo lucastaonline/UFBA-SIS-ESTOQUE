@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       let resposta = await httpClient.get(`auth/validate-token`, {
         headers: {
-          Authorization: token.value
+          Authorization: `Bearer ${token.value}`
         }
       })
 
