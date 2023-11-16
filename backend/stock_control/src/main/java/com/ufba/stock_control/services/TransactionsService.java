@@ -1,13 +1,12 @@
 package com.ufba.stock_control.services;
 
 import com.ufba.stock_control.dtos.transactions.CreateTransactionItemRequest;
-import com.ufba.stock_control.dtos.transactions.CreateTransactionItemResponse;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionRequest;
 import com.ufba.stock_control.dtos.transactions.CreateTransactionResponse;
 import com.ufba.stock_control.entities.Product;
 import com.ufba.stock_control.entities.ProductOrder;
 import com.ufba.stock_control.entities.Transaction;
-import com.ufba.stock_control.entities.User;
+import com.ufba.stock_control.entities.TransactionType;
 import com.ufba.stock_control.exceptions.ConflictException;
 import com.ufba.stock_control.exceptions.NotFoundException;
 import com.ufba.stock_control.helpers.mappers.TransactionMapper;
@@ -16,15 +15,12 @@ import com.ufba.stock_control.repositories.TransactionTypeRepository;
 import com.ufba.stock_control.repositories.TransactionsRepository;
 import com.ufba.stock_control.repositories.UsersRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
 import java.util.ArrayList;
-import java.util.Date;
 
 @Service
 public class TransactionsService {
@@ -119,5 +115,11 @@ public class TransactionsService {
   public List<Transaction> listTransactions() {
     return transactionsRepository.findAll();
   }
+  
+  public List<TransactionType> listAllTransactionTypes() {
+    return transactionTypeRepository.findAll();
+  }
+  
+
 
 }
