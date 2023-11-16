@@ -23,6 +23,7 @@ import java.util.UUID;
   consumes = MediaType.APPLICATION_JSON_VALUE,
   produces = MediaType.APPLICATION_JSON_VALUE
 )
+@CrossOrigin(origins = "*")
 public class ProductsController {
   @Autowired
   private ProductsService productsService;

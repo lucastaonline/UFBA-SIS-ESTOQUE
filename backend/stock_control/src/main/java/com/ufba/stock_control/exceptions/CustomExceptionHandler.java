@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.ufba.stock_control.dtos.errors.ValidationErrorResponse;
 import com.ufba.stock_control.dtos.errors.ErrorResponse;
@@ -37,6 +38,19 @@ public class CustomExceptionHandler {
                 .message("FieldException")
                 .errors(response)
                 .build());
+  }
+
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ErrorResponse>  handleValidationErrors(MethodArgumentTypeMismatchException ex) {
+  
+
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(ErrorResponse.builder()
+              .timeStamp(System.currentTimeMillis())
+              .status(HttpStatus.BAD_REQUEST.value())
+              .message(ex.getMessage()).build());
   }
 
   @ExceptionHandler(UnauthorizedException.class)

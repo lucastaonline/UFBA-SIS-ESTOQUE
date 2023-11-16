@@ -6,6 +6,7 @@ import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import type { AxiosResponse } from 'axios'
 import { useToastStore } from '@/stores/toast'
+import { PRODUCT_CATEGORY, PRODUCT_CATEGORY_LABEL } from '@/enums/product_category'
 
 const produtos = ref<Produto[]>([])
 const authStore = useAuthStore()
@@ -29,6 +30,15 @@ onMounted(() => {
         )
       }
     })
+    .catch((error) => {
+      console.log(error)
+
+      toastStore.showMessage(
+        'danger',
+        'Erro!',
+        'Não foi possível retornar o estado atual do estoque.'
+      )
+    })
 })
 </script>
 
@@ -37,23 +47,48 @@ onMounted(() => {
     <div class="container-lg">
       <div class="y-5">
         <div class="row">
-          <h1 class="fw-light">Estoque atual</h1>
+          <h1 class="fw-light">
+            Produtos
+            <a class="btn btn-primary" href="/products-form"
+              ><font-awesome-icon :icon="['fas', 'fa-plus']"
+            /></a>
+          </h1>
         </div>
       </div>
       <table class="table">
         <thead>
           <tr>
-            <th>Produto</th>
+            <th>Nome</th>
             <th>Quantidade em estoque</th>
+            <th>Preço</th>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="produto in produtos">
             <td>{{ produto.name }}</td>
             <td>{{ produto.stock }} unidades</td>
+            <td>{{ produto.price }} R$</td>
+            <td>{{ produto.description }}</td>
+            <td>{{ produto.categories }}</td>
+            <td>
+              <a class="btn btn-primary" :href="`/products-form/${produto.id}`"
+                ><font-awesome-icon :icon="['fas', 'fa-edit']"
+              /></a>
+            </td>
+            <td>
+              <button class="btn btn-danger">
+                <font-awesome-icon :icon="['fas', 'fa-times']" />
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </MainLayoutComponentVue>
 </template>
+
+<style></style>

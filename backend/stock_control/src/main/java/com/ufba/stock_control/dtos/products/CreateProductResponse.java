@@ -15,9 +15,9 @@ import java.util.UUID;
 public class CreateProductResponse {
 
   UUID id;
-  String productName;
+  String name;
   Double price;
   String description;
   Integer stock;
-  ProductCategory category;
+  ProductCategory categories;
 }
