@@ -67,14 +67,17 @@ public class ProductsService {
   }
   
   public CreateProductResponse findProductByName(String name) {
-    Product createdProduct = productsRepository.findProductByName(name);
+    var createdProduct = productsRepository.findProductByName(name);
+    
+    if (!createdProduct.isPresent()) { return CreateProductResponse.builder().build(); }
+
     return CreateProductResponse.builder()
-      .id(createdProduct.getId())
-      .name(createdProduct.getName())
-      .description(createdProduct.getDescription())
-      .price(createdProduct.getPrice())
-      .stock(createdProduct.getStock())
-      .categories(createdProduct.getCategories())
+      .id(createdProduct.get().getId())
+      .name(createdProduct.get().getName())
+      .description(createdProduct.get().getDescription())
+      .price(createdProduct.get().getPrice())
+      .stock(createdProduct.get().getStock())
+      .categories(createdProduct.get().getCategories())
       .build();
   }
 

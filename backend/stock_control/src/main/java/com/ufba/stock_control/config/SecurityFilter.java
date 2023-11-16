@@ -1,15 +1,16 @@
 package com.ufba.stock_control.config;
 
+import com.ufba.stock_control.entities.User;
+import com.ufba.stock_control.exceptions.UnauthorizedException;
 import com.ufba.stock_control.repositories.UsersRepository;
 import com.ufba.stock_control.services.JwtTokenService;
 
 import java.io.IOException;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,8 +34,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     
     if (token != null) {
       var subject =  tokenService.validateToken(token);
-      UserDetails userDetails = usersRepository.findOneByUserName(subject);
-      
+      var userDetails = usersRepository.findOneByUserName(subject).orElseThrow(() -> new UnauthorizedException("Erro ao criar sessão do usuário")); 
       var authentication =  new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(authentication);
     }
@@ -44,7 +44,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
   private String recoverToken(HttpServletRequest request) {
     var authHeader = request.getHeader("Authorization");
-    if (authHeader == null) return null;
+    if (authHeader == null)
+      return null;
     return authHeader.replace("Bearer ", "");
   }
 

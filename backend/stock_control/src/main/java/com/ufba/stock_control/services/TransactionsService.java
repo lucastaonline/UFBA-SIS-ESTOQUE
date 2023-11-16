@@ -12,6 +12,7 @@ import com.ufba.stock_control.entities.TransactionType;
 import com.ufba.stock_control.entities.User;
 import com.ufba.stock_control.exceptions.ConflictException;
 import com.ufba.stock_control.exceptions.NotFoundException;
+import com.ufba.stock_control.exceptions.UnauthorizedException;
 import com.ufba.stock_control.helpers.mappers.TransactionMapper;
 import com.ufba.stock_control.repositories.ProductsOrderRepository;
 import com.ufba.stock_control.repositories.ProductsRepository;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -55,6 +55,7 @@ public class TransactionsService {
   private User getLoggedUserDetails() {
     Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
     User userDetails = (User) authentication.getPrincipal();
+    if (userDetails == null) { throw new UnauthorizedException("Usuário não logado"); }
     return userDetails;
   }
 
@@ -75,25 +76,25 @@ public class TransactionsService {
 
     for (CreateTransactionItemRequest item : createTransactionRequest.getItems()) {
       Double unitaryPrice;
-      Product foundProduct = productsRepository.findOneById(item.productId());
-      if (foundProduct == null) {
+      var foundProduct = productsRepository.findOneById(item.productId());
+      if (!foundProduct.isPresent()) {
         throw new NotFoundException("Produto não encontrado");
       }
 
 
-      unitaryPrice = foundProduct.getPrice() * item.quantity();
+      unitaryPrice = foundProduct.get().getPrice() * item.quantity();
 
       if (foundTransactionType.getDirection() == TransactionDirection.INLET) {
-        foundProduct.setStock(foundProduct.getStock() + item.quantity());
+        foundProduct.get().setStock(foundProduct.get().getStock() + item.quantity());
       } else {
-        if (foundProduct.getStock() < item.quantity()) {
-          throw new ConflictException("Produto sem estoque no momento:" + foundProduct.getName());
+        if (foundProduct.get().getStock() < item.quantity()) {
+          throw new ConflictException("Produto sem estoque no momento:" + foundProduct.get().getName());
         }
-        foundProduct.setStock(foundProduct.getStock() - item.quantity());
+        foundProduct.get().setStock(foundProduct.get().getStock() - item.quantity());
       }
 
       ProductOrder createdProductOrder = ProductOrder.builder()
-        .product(foundProduct)
+        .product(foundProduct.get())
         .value(unitaryPrice)
         .quantity(item.quantity())
         .transaction(createdTransaction)
@@ -102,8 +103,9 @@ public class TransactionsService {
       transactionValue += unitaryPrice;
       
       productOrders.add(createdProductOrder);
-      this.productsRepository.save(foundProduct);
+      this.productsRepository.save(foundProduct.get());
     }
+    
     createdTransaction.setValue(transactionValue);
     transactionsRepository.save(createdTransaction);
     productsOrderRepository.saveAll(productOrders);
@@ -115,8 +117,8 @@ public class TransactionsService {
   }
 
   public Transaction findTransaction(UUID id) {
-    Transaction createdTransaction = transactionsRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    return createdTransaction;
+    Transaction foundTransaction = transactionsRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    return foundTransaction;
   }
 
   public void deleteTransaction(UUID id) {

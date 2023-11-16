@@ -12,6 +12,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.ufba.stock_control.entities.User;
 
 @Service
@@ -45,7 +46,7 @@ public class JwtTokenService {
         .verify(token)
         .getSubject();
     } catch (JWTVerificationException ex) {
-      return "";
+        throw new TokenExpiredException(token, getExpirationDate());
     }
   }
 
