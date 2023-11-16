@@ -21,16 +21,14 @@ const loggingIn = ref(false)
 const toastStore = useToastStore()
 const authStore = useAuthStore()
 
-onMounted(() => {
-  if (props.sessionTimeout) {
-    authStore.clear()
-    toastStore.showMessage(
-      'warning',
-      'Aviso!',
-      'Você perdeu sua sessão. Você deverá logar novamente.'
-    )
-  }
-})
+if (props.sessionTimeout) {
+  authStore.clear()
+  toastStore.showMessage(
+    'warning',
+    'Aviso!',
+    'Você perdeu sua sessão. Você deverá logar novamente.'
+  )
+}
 
 function login() {
   loggingIn.value = true
@@ -89,6 +87,10 @@ function login() {
       )
     })
 }
+
+function verificarEnter($event: KeyboardEvent) {
+  if ($event.key == 'Enter') login()
+}
 </script>
 
 <template>
@@ -99,7 +101,7 @@ function login() {
         <p class="lead text-muted">Realize o login para acessar o sistema</p>
       </div>
     </div>
-    <div class="login-form-container">
+    <div class="login-form-container" v-on:keypress="verificarEnter">
       <div class="bg-light p-5 rounded">
         <div class="form-fields">
           <div class="form-group">

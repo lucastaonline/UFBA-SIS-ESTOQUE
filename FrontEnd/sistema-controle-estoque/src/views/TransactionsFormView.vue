@@ -3,7 +3,6 @@ import MainLayoutComponentVue from '@/components/MainLayoutComponent.vue'
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
-import type { Transaction } from '@/types/transaction'
 import type {
   PersistTransactionRequest,
   PersistTransactionResponse
@@ -27,14 +26,14 @@ const authStore = useAuthStore()
 const toastStore = useToastStore()
 const router = useRouter()
 
+const products = ref<Product[]>([])
+const transactionTypes = ref<TransactionType[]>([])
+
 const creating = ref(false)
 const persistTransactionRequest = ref<PersistTransactionRequest>({
   transactionTypeId: '',
   items: []
 })
-
-const products = ref<Product[]>([])
-const transactionTypes = ref<TransactionType[]>([])
 
 function addItem() {
   persistTransactionRequest.value.items.push({
@@ -89,6 +88,8 @@ function getTransactionTypes() {
     .then((response: AxiosResponse<TransactionType[]>) => {
       if (response.status == 200) {
         transactionTypes.value = response.data
+        if (transactionTypes.value.length > 0)
+          persistTransactionRequest.value.transactionTypeId = transactionTypes.value[0].id
       } else {
         toastStore.showMessage(
           'danger',
@@ -159,9 +160,9 @@ function saveTransaction() {
 
 const sortedProducts = computed(() => {
   const sortFunction = (a: Product, b: Product) => {
-    if (a.name > b.name) {
+    if (a.name.toLowerCase() > b.name.toLowerCase()) {
       return 1
-    } else if (a.name < b.name) {
+    } else if (a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1
     }
 
@@ -245,7 +246,7 @@ const sortedProducts = computed(() => {
                 Salvar movimentação de estoque
                 <font-awesome-icon v-if="creating" :icon="['fas', 'fa-spinner']" :spin="true" />
               </button>
-              <a class="btn btn-outline-primary" href="/transactions">Voltar</a>
+              <RouterLink to="/transactions" class="btn btn-outline-primary"> Voltar </RouterLink>
             </div>
           </div>
         </div>
@@ -254,7 +255,7 @@ const sortedProducts = computed(() => {
   </MainLayoutComponentVue>
 </template>
 
-<style>
+<style scoped>
 .form-fields input,
 .form-fields select {
   margin-bottom: 1rem;

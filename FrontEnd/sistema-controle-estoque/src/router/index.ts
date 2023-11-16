@@ -34,23 +34,35 @@ const router = createRouter({
     {
       path: '/products',
       name: 'products',
-      component: ProductsView
+      component: ProductsView,
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/products-form/:productId?',
       props: true,
       name: 'products-form',
-      component: ProductsFormView
+      component: ProductsFormView,
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/transactions',
       name: 'transactions',
-      component: TransactionsView
+      component: TransactionsView,
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/transactions-form',
       name: 'transactions-form',
-      component: TransactionsFormView
+      component: TransactionsFormView,
+      meta: {
+        auth: true
+      }
     }
   ]
 })

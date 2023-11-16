@@ -71,16 +71,20 @@ function deleteProduct(id: string) {
         if (error.response?.status == 401)
           router.push({ name: 'login', query: { sessionTimeout: 'true' } })
         else
-          toastStore.showMessage('danger', 'Erro!', 'Ocorreu um erro ao tentar deletar o produto.')
+          toastStore.showMessage(
+            'danger',
+            'Erro!',
+            `Ocorreu um erro ao tentar deletar o produto: ${error.response?.data?.message}.`
+          )
       })
   }
 }
 
 const sortedProducts = computed(() => {
   const sortFunction = (a: Product, b: Product) => {
-    if (a.name > b.name) {
+    if (a.name.toLowerCase() > b.name.toLowerCase()) {
       return 1
-    } else if (a.name < b.name) {
+    } else if (a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1
     }
 
@@ -98,9 +102,12 @@ const sortedProducts = computed(() => {
         <div class="row">
           <h1 class="fw-light">
             Produtos
-            <a class="btn btn-primary" href="/products-form"
-              ><font-awesome-icon :icon="['fas', 'fa-plus']"
-            /></a>
+            <RouterLink
+              to="/products-form"
+              :class="['btn btn-primary', authStore.userIsAdmin() ? '' : 'disabled-link']"
+            >
+              <font-awesome-icon :icon="['fas', 'fa-plus']" />
+            </RouterLink>
           </h1>
         </div>
       </div>
@@ -124,12 +131,19 @@ const sortedProducts = computed(() => {
             <td>{{ product.description }}</td>
             <td>{{ PRODUCT_CATEGORY_LABEL.get(Number(PRODUCT_CATEGORY[product.categories])) }}</td>
             <td>
-              <a class="btn btn-primary" :href="`/products-form/${product.id}`"
-                ><font-awesome-icon :icon="['fas', 'fa-edit']"
-              /></a>
+              <RouterLink
+                :to="`/products-form/${product.id}`"
+                :class="['btn btn-primary', authStore.userIsAdmin() ? '' : 'disabled-link']"
+              >
+                <font-awesome-icon :icon="['fas', 'fa-edit']" />
+              </RouterLink>
             </td>
             <td>
-              <button class="btn btn-danger" v-on:click="() => deleteProduct(product.id)">
+              <button
+                class="btn btn-danger"
+                v-on:click="() => deleteProduct(product.id)"
+                :disabled="!authStore.userIsAdmin()"
+              >
                 <font-awesome-icon :icon="['fas', 'fa-times']" />
               </button>
             </td>
@@ -140,4 +154,9 @@ const sortedProducts = computed(() => {
   </MainLayoutComponentVue>
 </template>
 
-<style></style>
+<style scoped>
+.disabled-link {
+  opacity: 0.65;
+  pointer-events: none;
+}
+</style>

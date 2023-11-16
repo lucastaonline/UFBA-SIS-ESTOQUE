@@ -7,7 +7,7 @@ const toastStore = useToastStore()
 
 <template>
   <router-view v-slot="{ Component, route }">
-    <transition name="slide-fade">
+    <transition appear>
       <component :is="Component" :key="route.path" />
     </transition>
   </router-view>
@@ -36,20 +36,18 @@ const toastStore = useToastStore()
 </template>
 
 <style scoped>
-.slide-fade-enter-active {
-  transition: all 1.2s cubic-bezier(1, 0.5, 0.8, 1);
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.4s ease;
 }
 
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
-.slide-fade-enter-from {
-  transform: translateX(20px);
-  opacity: 0;
-}
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
+.v-leave-to {
+  position: absolute;
+  width: 100%;
 }
 </style>

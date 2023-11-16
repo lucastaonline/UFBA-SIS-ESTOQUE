@@ -18,6 +18,10 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = userValue
   }
 
+  function userIsAdmin() {
+    return isAuthenticated() && user.value.decodedToken.role == 'ADMIN'
+  }
+
   async function checkToken() {
     try {
       let resposta = await httpClient.get(`auth/validate-token`, {
@@ -51,6 +55,7 @@ export const useAuthStore = defineStore('auth', () => {
     setUser,
     checkToken,
     isAuthenticated,
+    userIsAdmin,
     clear
   }
 })

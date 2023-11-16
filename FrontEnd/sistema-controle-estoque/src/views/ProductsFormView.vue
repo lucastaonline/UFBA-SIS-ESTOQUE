@@ -47,7 +47,8 @@ onMounted(() => {
           persistProductRequest.value.price = product.price
           persistProductRequest.value.description = product.description
           persistProductRequest.value.stock = product.stock
-          persistProductRequest.value.categories = product.categories
+          persistProductRequest.value.categories =
+            PRODUCT_CATEGORY[product.categories.toString() as keyof typeof PRODUCT_CATEGORY]
         } else {
           toastStore.showMessage(
             'danger',
@@ -75,6 +76,25 @@ onMounted(() => {
 
 function saveProduct() {
   creating.value = true
+
+  if (
+    persistProductRequest.value.name == null ||
+    persistProductRequest.value.name == '' ||
+    persistProductRequest.value.price == null ||
+    persistProductRequest.value.description == null ||
+    persistProductRequest.value.description == '' ||
+    persistProductRequest.value.stock == null
+  ) {
+    creating.value = false
+    toastStore.showMessage(
+      'danger',
+      'Erro!',
+      'Você deve preencher todos os campos para fazer login.'
+    )
+
+    return
+  }
+
   const onSuccess = (response: AxiosResponse<PersistProductResponse>) => {
     creating.value = false
     if (response.status == 200) {
@@ -114,11 +134,15 @@ function saveProduct() {
       .catch(onError)
   }
 }
+
+function verificarEnter($event: KeyboardEvent) {
+  if ($event.key == 'Enter') saveProduct()
+}
 </script>
 
 <template>
   <MainLayoutComponentVue>
-    <div class="container-xl">
+    <div class="container-xl" v-on:keypress="verificarEnter">
       <div class="register">
         <div class="y-5">
           <div class="row">
@@ -169,7 +193,10 @@ function saveProduct() {
               <div class="form-group">
                 <label>Categoria</label>
                 <select class="form-control" v-model="persistProductRequest.categories">
-                  <option v-for="productCategory in PRODUCT_CATEGORY_KEYS" :value="productCategory">
+                  <option
+                    v-for="productCategory in PRODUCT_CATEGORY_KEYS"
+                    :value="PRODUCT_CATEGORY[productCategory as keyof typeof PRODUCT_CATEGORY]"
+                  >
                     {{
                       PRODUCT_CATEGORY_LABEL.get(
                         PRODUCT_CATEGORY[productCategory as keyof typeof PRODUCT_CATEGORY]
@@ -184,7 +211,7 @@ function saveProduct() {
                 Salvar produto
                 <font-awesome-icon v-if="creating" :icon="['fas', 'fa-spinner']" :spin="true" />
               </button>
-              <a class="btn btn-outline-primary" href="/products">Voltar</a>
+              <RouterLink to="/products" class="btn btn-outline-primary"> Voltar </RouterLink>
             </div>
           </div>
         </div>
@@ -193,7 +220,7 @@ function saveProduct() {
   </MainLayoutComponentVue>
 </template>
 
-<style>
+<style scoped>
 .form-actions {
   margin-top: 1rem;
 }

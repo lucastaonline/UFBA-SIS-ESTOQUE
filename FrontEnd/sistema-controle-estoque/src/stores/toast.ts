@@ -1,6 +1,7 @@
 import { ref, reactive, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { Toast } from 'bootstrap'
+import { nextTick } from 'vue'
 
 export const useToastStore = defineStore('toast', () => {
   const opened = ref(false)
@@ -30,7 +31,10 @@ export const useToastStore = defineStore('toast', () => {
     setType(type)
     setTitle(title)
     setMessage(message)
-    setOpened(true)
+
+    if (opened.value) setOpened(false)
+
+    nextTick(() => setOpened(true))
   }
 
   watch(opened, (opened) => {

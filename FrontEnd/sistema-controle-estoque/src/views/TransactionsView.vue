@@ -99,9 +99,12 @@ const sortedTransactions = computed(() => {
         <div class="row">
           <h1 class="fw-light">
             Movimentação de estoque
-            <a class="btn btn-primary" href="/transactions-form"
-              ><font-awesome-icon :icon="['fas', 'fa-plus']"
-            /></a>
+            <RouterLink
+              to="/transactions-form"
+              :class="['btn btn-primary', authStore.userIsAdmin() ? '' : 'disabled-link']"
+            >
+              <font-awesome-icon :icon="['fas', 'fa-plus']" />
+            </RouterLink>
           </h1>
         </div>
       </div>

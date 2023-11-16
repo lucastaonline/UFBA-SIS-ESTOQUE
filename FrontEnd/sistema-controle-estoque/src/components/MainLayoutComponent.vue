@@ -15,7 +15,7 @@ function logout() {
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Controle de estoque | VitaSaúde</a>
+        <span class="navbar-brand">Controle de estoque | VitaSaúde</span>
         <button
           class="navbar-toggler"
           type="button"
@@ -30,28 +30,28 @@ function logout() {
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a
+              <RouterLink
+                to="/"
                 :class="['nav-link', router.currentRoute.value.name == 'home' ? 'active' : '']"
-                href="/"
-                >Home</a
               >
+                Home
+              </RouterLink>
             </li>
             <li class="nav-item">
-              <a
-                :class="['nav-link', router.currentRoute.value.name == 'products' ? 'active' : '']"
-                href="/products"
-                >Produtos</a
+              <RouterLink
+                to="/products"
+                :class="['nav-link', router.currentRoute.value.name == 'home' ? 'active' : '']"
               >
+                Produtos
+              </RouterLink>
             </li>
             <li class="nav-item">
-              <a
-                :class="[
-                  'nav-link',
-                  router.currentRoute.value.name == 'transactions' ? 'active' : ''
-                ]"
-                href="/transactions"
-                >Movimentação de estoque</a
+              <RouterLink
+                to="/transactions"
+                :class="['nav-link', router.currentRoute.value.name == 'home' ? 'active' : '']"
               >
+                Movimentação de estoque
+              </RouterLink>
             </li>
           </ul>
           <button class="btn btn-primary" v-on:click="logout">Logout</button>
