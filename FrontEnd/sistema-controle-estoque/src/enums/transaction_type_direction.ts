@@ -1,0 +1,9 @@
+export enum TRANSACTION_TYPE_DIRECTION {
+  INLET,
+  OUTLET
+}
+
+export const TRANSACTION_TYPE_DIRECTION_LABEL = new Map<number, string>([
+  [TRANSACTION_TYPE_DIRECTION.INLET, 'Entrada'],
+  [TRANSACTION_TYPE_DIRECTION.OUTLET, 'Saída']
+])

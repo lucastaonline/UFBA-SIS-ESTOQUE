@@ -1,5 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import type { AxiosResponse } from 'axios'
+import httpClient from '@/services/http-client'
+import { faL } from '@fortawesome/free-solid-svg-icons'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('token'))
@@ -15,21 +18,19 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = userValue
   }
 
-  function checkToken() {
+  async function checkToken() {
     try {
-      const tokenAuth = 'Bearer ' + token
+      let resposta = await httpClient.get(`auth/validate-token`, {
+        headers: {
+          Authorization: token.value
+        }
+      })
 
-      // preciso aguardar backend
-
-      //const {data} = await http.get('url-verificar-token', {
-      //    headers: {
-      //        Authorization: tokenAuth
-      //    }
-      //})
-      //return data
-      return true
+      return resposta.status == 200
     } catch (error: any) {
-      console.log(error.response.data)
+      console.log(error)
+
+      return false
     }
   }
 

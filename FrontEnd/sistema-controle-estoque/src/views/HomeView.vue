@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import MainLayoutComponentVue from '@/components/MainLayoutComponent.vue'
-import type { Produto } from '@/types/product'
+import type { Product } from '@/types/product'
 import { onMounted, ref } from 'vue'
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
-import type { AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 import { useToastStore } from '@/stores/toast'
+import { useRouter } from 'vue-router'
 
-const produtos = ref<Produto[]>([])
+const products = ref<Product[]>([])
 const authStore = useAuthStore()
 const toastStore = useToastStore()
+const router = useRouter()
 
 onMounted(() => {
   httpClient
@@ -18,9 +20,9 @@ onMounted(() => {
         Authorization: authStore.token
       }
     })
-    .then((response: AxiosResponse<Produto[]>) => {
+    .then((response: AxiosResponse<Product[]>) => {
       if (response.status == 200) {
-        produtos.value = response.data
+        products.value = response.data
       } else {
         toastStore.showMessage(
           'danger',
@@ -28,6 +30,18 @@ onMounted(() => {
           'Não foi possível retornar o estado atual do estoque.'
         )
       }
+    })
+    .catch((error: AxiosError) => {
+      console.log(error)
+
+      if (error.response?.status == 401)
+        router.push({ name: 'login', query: { sessionTimeout: 'true' } })
+      else
+        toastStore.showMessage(
+          'danger',
+          'Erro!',
+          'Não foi possível retornar o estado atual do estoque.'
+        )
     })
 })
 </script>
@@ -48,7 +62,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="produto in produtos">
+          <tr v-for="produto in products">
             <td>{{ produto.name }}</td>
             <td>{{ produto.stock }} unidades</td>
           </tr>

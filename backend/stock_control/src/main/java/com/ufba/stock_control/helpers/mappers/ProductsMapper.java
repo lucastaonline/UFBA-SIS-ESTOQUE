@@ -9,11 +9,11 @@ public class ProductsMapper {
 
   public Product toProductEntity(CreateProductRequest createdProduct) {
     Product product = new Product();
-    product.setName(createdProduct.getProductName());
+    product.setName(createdProduct.getName());
     product.setStock(createdProduct.getStock());
     product.setPrice(createdProduct.getPrice());
     product.setDescription(createdProduct.getDescription());
-    product.setCategories(createdProduct.getCategory());
+    product.setCategories(createdProduct.getCategories());
     return product;
   }
   

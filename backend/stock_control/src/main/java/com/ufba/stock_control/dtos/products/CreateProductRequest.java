@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class CreateProductRequest {
   
   @NotBlank
-  String productName;
+  String name;
   @NotBlank
   Double price;
   @Nullable
@@ -21,5 +21,5 @@ public class CreateProductRequest {
   @NotBlank
   Integer stock;
   @NotBlank
-  ProductCategory category;
+  ProductCategory categories;
 }

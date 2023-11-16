@@ -54,11 +54,11 @@ public class ProductsService {
 
   public Product updateProduct(UUID id, CreateProductRequest requestProduct) {
     Product existingProduct = productsRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    existingProduct.setName(requestProduct.getProductName());
+    existingProduct.setName(requestProduct.getName());
     existingProduct.setDescription(requestProduct.getDescription());
     existingProduct.setPrice(requestProduct.getPrice());
     existingProduct.setStock(requestProduct.getStock()); 
-    existingProduct.setCategories(requestProduct.getCategory());
+    existingProduct.setCategories(requestProduct.getCategories());
     return productsRepository.save(existingProduct);
   }
 

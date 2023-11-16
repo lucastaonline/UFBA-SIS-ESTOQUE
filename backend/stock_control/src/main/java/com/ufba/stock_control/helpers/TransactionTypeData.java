@@ -55,7 +55,17 @@ public class TransactionTypeData {
       .build();
       transactionTypeRepository.save(transactionType5);
 
-    
+      TransactionType transactionType6 = TransactionType.builder()
+      .direction(TransactionDirection.INLET)
+      .description(TransactionDescription.CREDIT_ADJUST)
+      .build();
+      transactionTypeRepository.save(transactionType6);
+
+      TransactionType transactionType7 = TransactionType.builder()
+      .direction(TransactionDirection.OUTLET)
+      .description(TransactionDescription.DEBIT_ADJUST)
+      .build();
+      transactionTypeRepository.save(transactionType7);
   }
   
   

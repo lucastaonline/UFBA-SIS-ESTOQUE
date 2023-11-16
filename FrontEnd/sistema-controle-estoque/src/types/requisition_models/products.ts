@@ -1,7 +1,7 @@
 import type { PRODUCT_CATEGORY } from '@/enums/product_category'
 
 type PersistProductRequest = {
-  productName: string
+  name: string
   price: number
   description: string
   stock: number
@@ -10,7 +10,7 @@ type PersistProductRequest = {
 
 type PersistProductResponse = {
   id: string
-  productName: string
+  name: string
   price: number
   description: string
   stock: number

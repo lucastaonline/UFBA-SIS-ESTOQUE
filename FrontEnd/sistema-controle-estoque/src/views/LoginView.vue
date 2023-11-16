@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
@@ -9,16 +9,29 @@ import type { AxiosResponse } from 'axios'
 
 const router = useRouter()
 
+const props = defineProps({ sessionTimeout: Boolean })
+
 const createUserRequest = reactive<LoginRequest>({
   username: '',
   password: ''
 })
 
 const loggingIn = ref(false)
+var toastStore = useToastStore()
+
+onMounted(() => {
+  if (props.sessionTimeout) {
+    toastStore.showMessage(
+      'warning',
+      'Aviso!',
+      'Você perdeu sua sessão. Você deverá logar novamente.'
+    )
+  }
+})
 
 function login() {
   loggingIn.value = true
-  var toastStore = useToastStore()
+
   var authStore = useAuthStore()
 
   if (

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 import { useToastStore } from '@/stores/toast'
 
 const toastStore = useToastStore()

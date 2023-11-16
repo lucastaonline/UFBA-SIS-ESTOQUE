@@ -4,11 +4,11 @@ import { PRODUCT_CATEGORY, PRODUCT_CATEGORY_LABEL } from '@/enums/product_catego
 import httpClient from '@/services/http-client'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
-import type { Produto } from '@/types/product'
+import type { Product } from '@/types/product'
 import type {
   PersistProductRequest,
   PersistProductResponse
-} from '@/types/requisition_models/products_requisitions'
+} from '@/types/requisition_models/products.js'
 import type { AxiosResponse } from 'axios'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -21,7 +21,7 @@ const router = useRouter()
 
 const creating = ref(false)
 const persistProductRequest = ref<PersistProductRequest>({
-  productName: '',
+  name: '',
   price: 0.0,
   description: '',
   stock: 0.0,
@@ -40,14 +40,14 @@ onMounted(() => {
           Authorization: authStore.token
         }
       })
-      .then((response: AxiosResponse<Produto>) => {
+      .then((response: AxiosResponse<Product>) => {
         if (response.status == 200) {
-          const produto = response.data
-          persistProductRequest.value.productName = produto.name
-          persistProductRequest.value.price = produto.price
-          persistProductRequest.value.description = produto.description
-          persistProductRequest.value.stock = produto.stock
-          persistProductRequest.value.categories = produto.categories
+          const product = response.data
+          persistProductRequest.value.name = product.name
+          persistProductRequest.value.price = product.price
+          persistProductRequest.value.description = product.description
+          persistProductRequest.value.stock = product.stock
+          persistProductRequest.value.categories = product.categories
         } else {
           toastStore.showMessage(
             'danger',
@@ -59,13 +59,16 @@ onMounted(() => {
       })
       .catch((error: any) => {
         console.log(error)
-
-        toastStore.showMessage(
-          'danger',
-          'Erro!',
-          'Não foi obter o produto selecionado. Redirecionando para tela de produtos.'
-        )
-        router.push({ name: 'products' })
+        if (error.response?.status == 401) {
+          router.push({ name: 'login', query: { sessionTimeout: 'true' } })
+        } else {
+          toastStore.showMessage(
+            'danger',
+            'Erro!',
+            'Não foi obter o produto selecionado. Redirecionando para tela de produtos.'
+          )
+          router.push({ name: 'products' })
+        }
       })
   }
 })
@@ -86,7 +89,9 @@ function saveProduct() {
     creating.value = false
     console.log(error)
 
-    toastStore.showMessage('danger', 'Erro!', 'Não foi possível salvar o produto.')
+    if (error.response?.status == 401)
+      router.push({ name: 'login', query: { sessionTimeout: 'true' } })
+    else toastStore.showMessage('danger', 'Erro!', 'Não foi possível salvar o produto.')
   }
 
   if (props.productId) {
@@ -128,7 +133,7 @@ function saveProduct() {
                 <input
                   class="form-control"
                   placeholder="Nome do produto"
-                  v-model="persistProductRequest.productName"
+                  v-model="persistProductRequest.name"
                 />
               </div>
               <div class="form-group">
@@ -165,14 +170,18 @@ function saveProduct() {
                 <label>Categoria</label>
                 <select class="form-control" v-model="persistProductRequest.categories">
                   <option v-for="productCategory in PRODUCT_CATEGORY_KEYS" :value="productCategory">
-                    {{ PRODUCT_CATEGORY_LABEL.get(Number(productCategory)) }}
+                    {{
+                      PRODUCT_CATEGORY_LABEL.get(
+                        PRODUCT_CATEGORY[productCategory as keyof typeof PRODUCT_CATEGORY]
+                      )
+                    }}
                   </option>
                 </select>
               </div>
             </div>
             <div class="form-actions">
               <button class="btn btn-primary" v-on:click="saveProduct">
-                Criar produto
+                Salvar produto
                 <font-awesome-icon v-if="creating" :icon="['fas', 'fa-spinner']" :spin="true" />
               </button>
               <a class="btn btn-outline-primary" href="/products">Voltar</a>

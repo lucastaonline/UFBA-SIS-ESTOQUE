@@ -5,7 +5,9 @@ public enum TransactionDescription {
   SELL(1),
   CUSTOMER_CHARGEBACK(2),
   DISTRIBUTOR_CHARGEBACK(3),
-  DISCARD(4);
+  DISCARD(4),
+  CREDIT_ADJUST(5),
+  DEBIT_ADJUST(6);
 
 
   private Integer direction;

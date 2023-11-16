@@ -2,9 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import ProductsView from '@/views/ProductsView.Vue'
+import ProductsView from '@/views/ProductsView.vue'
 import ProductsFormView from '@/views/ProductsFormView.vue'
+import TransactionsView from '@/views/TransactionsView.vue'
+import TransactionsFormView from '@/views/TransactionsFormView.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +28,8 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      props: (route) => ({ sessionTimeout: route.query.sessionTimeout == 'true' })
     },
     {
       path: '/products',
@@ -33,23 +37,38 @@ const router = createRouter({
       component: ProductsView
     },
     {
-      path: '/products-form/:productId',
+      path: '/products-form/:productId?',
       props: true,
       name: 'products-form',
       component: ProductsFormView
+    },
+    {
+      path: '/transactions',
+      name: 'transactions',
+      component: TransactionsView
+    },
+    {
+      path: '/transactions-form/:transactionId?',
+      props: true,
+      name: 'transactions-form',
+      component: TransactionsFormView
     }
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (to.meta?.auth) {
     const authStore = useAuthStore()
+    const toastStore = useToastStore()
 
     if (authStore.token) {
-      const isAuthenticated = authStore.checkToken()
+      const isAuthenticated = await authStore.checkToken()
 
-      if (isAuthenticated) next()
-      else next({ name: 'login' })
+      if (isAuthenticated) {
+        next()
+      } else {
+        next({ name: 'login', query: { sessionTimeout: 'true' } })
+      }
     } else next({ name: 'login' })
   } else {
     next()
