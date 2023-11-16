@@ -7,14 +7,26 @@ import { useAuthStore } from '@/stores/auth'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { useToastStore } from '@/stores/toast'
 import { useRouter } from 'vue-router'
+import {
+  TRANSACTION_TYPE_DESCRIPTION_LABEL,
+  TRANSACTION_TYPE_DESCRIPTION
+} from '@/enums/transaction_type_description'
+import {
+  TRANSACTION_TYPE_DIRECTION_LABEL,
+  TRANSACTION_TYPE_DIRECTION
+} from '@/enums/transaction_type_direction'
+import { Modal } from 'bootstrap'
+import type { ProductOrder } from '@/types/product_order'
 
 const transactions = ref<Transaction[]>([])
 const authStore = useAuthStore()
 const toastStore = useToastStore()
 const router = useRouter()
 
+const modal = ref<Modal>()
 onMounted(() => {
   getTransactions()
+  modal.value = new Modal(document.getElementById('productsModal')!)
 })
 
 function getTransactions() {
@@ -48,6 +60,18 @@ function getTransactions() {
         )
     })
 }
+
+const productOrdersModal = ref<ProductOrder[]>([])
+
+function openProductsModal(products: ProductOrder[]) {
+  productOrdersModal.value = products
+  modal.value?.show()
+}
+
+function closeProductsModal() {
+  productOrdersModal.value = []
+  modal.value?.hide()
+}
 </script>
 
 <template>
@@ -77,14 +101,29 @@ function getTransactions() {
         </thead>
         <tbody>
           <tr v-for="transaction in transactions">
-            <td>{{ transaction.transactionType.description }}</td>
-            <td>{{ transaction.transactionType.direction }}</td>
             <td>
-              <button class="btn btn-primary">
+              {{
+                TRANSACTION_TYPE_DESCRIPTION_LABEL.get(
+                  Number(TRANSACTION_TYPE_DESCRIPTION[transaction.transactionType.description])
+                )
+              }}
+            </td>
+            <td>
+              {{
+                TRANSACTION_TYPE_DIRECTION_LABEL.get(
+                  Number(TRANSACTION_TYPE_DIRECTION[transaction.transactionType.direction])
+                )
+              }}
+            </td>
+            <td>
+              <button
+                class="btn btn-primary"
+                v-on:click="() => openProductsModal(transaction.productOrders)"
+              >
                 <font-awesome-icon :icon="['fas', 'fa-eye']" />
               </button>
             </td>
-            <td>{{ transaction.value }} R$</td>
+            <td>{{ transaction.value.toFixed(2) }} R$</td>
             <td>{{ transaction.createdAt }}</td>
             <td>{{ transaction.updateAt }}</td>
             <td>
@@ -95,6 +134,46 @@ function getTransactions() {
           </tr>
         </tbody>
       </table>
+      <div id="productsModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Produtos</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Preço do produto no momento da transação</th>
+                    <th>Quantidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="productOrder in productOrdersModal">
+                    <td>
+                      {{ productOrder.product.name }}
+                    </td>
+                    <td>{{ productOrder.product.price }} R$</td>
+                    <td>{{ productOrder.quantity }} unidades</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" v-on:click="closeProductsModal">
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </MainLayoutComponentVue>
 </template>

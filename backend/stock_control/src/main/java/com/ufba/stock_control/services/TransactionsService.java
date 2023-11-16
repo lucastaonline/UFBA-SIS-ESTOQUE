@@ -98,11 +98,9 @@ public class TransactionsService {
         .build();
   }
 
-  public CreateTransactionResponse findTransaction(UUID id) {
+  public Transaction findTransaction(UUID id) {
     Transaction createdTransaction = transactionsRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    return CreateTransactionResponse.builder()
-        .id(createdTransaction.getId())
-        .build();
+    return createdTransaction;
   }
 
   public void deleteTransaction(UUID id) {

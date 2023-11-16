@@ -32,7 +32,6 @@ const router = useRouter()
 const creating = ref(false)
 const persistTransactionRequest = ref<PersistTransactionRequest>({
   transactionTypeId: '',
-  userId: '',
   items: []
 })
 
@@ -129,7 +128,6 @@ onMounted(() => {
         if (response.status == 200) {
           const transaction = response.data
           persistTransactionRequest.value.transactionTypeId = transaction.transactionType.id
-          persistTransactionRequest.value.userId = transaction.user.id
           persistTransactionRequest.value.items = transaction.productOrders.map((x) => {
             return {
               productId: x.product.id,

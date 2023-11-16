@@ -34,7 +34,7 @@ public class TransactionsController {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.createTransaction(transactionDTO));
   }
   @GetMapping(value = "/{id}", consumes = MediaType.ALL_VALUE)
-  public ResponseEntity<CreateTransactionResponse> findTransaction(@PathVariable("id") UUID id) {
+  public ResponseEntity<Transaction> findTransaction(@PathVariable("id") UUID id) {
     return ResponseEntity.status(HttpStatus.OK).body(transactionsService.findTransaction(id));
   }
   @GetMapping(consumes = MediaType.ALL_VALUE)
