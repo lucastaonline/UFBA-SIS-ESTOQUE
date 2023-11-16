@@ -6,6 +6,7 @@ import { useToastStore } from '@/stores/toast'
 import { useRouter } from 'vue-router'
 import type { LoginRequest, LoginResponse } from '@/types/requisition_models/users'
 import type { AxiosResponse } from 'axios'
+import VueJwtDecode from 'vue-jwt-decode'
 
 const router = useRouter()
 
@@ -59,7 +60,9 @@ function login() {
 
       if (response.status == 200) {
         authStore.setToken(response.data.token)
-        authStore.setUser({ username: createUserRequest.username })
+        const decodedToken = VueJwtDecode.decode(response.data.token)
+        authStore.setUser({ username: createUserRequest.username, decodedToken: decodedToken })
+
         router.push({ name: 'home' })
       } else {
         toastStore.showMessage(
